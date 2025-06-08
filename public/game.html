@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>P.I.D.R. - Punishment Inevitable: Dumb Rules</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/game.css">
+    <link rel="stylesheet" href="/css/modal.css">
+</head>
+<body>
+    <div class="game-container">
+        <!-- Игровой стол с картами -->
+        <div class="table-container">
+            <div class="table oval-table">
+                <!-- Колода карт в центре стола -->
+                <div class="card-deck">
+                    <div class="card-pile deck"></div>
+                    <div class="card-pile discard"></div>
+                </div>
+                
+                <!-- Контейнер для игроков -->
+                <div class="players-container">
+                    <!-- Игроки будут добавлены динамически через JavaScript -->
+                </div>
+            </div>
+            <div class="table-overlay"></div>
+        </div>
+        
+        <!-- Информация о стадии игры -->
+        <div class="game-stage-info">
+            <div class="stage-number">Стадия 1</div>
+            <div class="stage-description">Выкладка карт на 1 ранг выше</div>
+        </div>
+        
+        <!-- Кнопка настроек -->
+        <div id="open-settings" class="settings-btn">
+            <span class="settings-icon">⚙️</span>
+        </div>
+        
+        <!-- Панель управления внизу экрана -->
+        <div class="game-controls">
+            <div class="current-player-info">
+                <div class="avatar-container">
+                    <img src="img/player-avatar.svg" width="40" height="40" alt="Аватар">
+                    <div class="player-indicator">Ваш ход</div>
+                </div>
+                <div class="player-name">Вы</div>
+            </div>
+            
+            <!-- Кнопки действий над картами игрока -->
+            <div class="action-buttons">
+                <button id="draw-card" class="game-btn">Взять карту</button>
+                <button id="play-card" class="game-btn">Сыграть</button>
+                <button id="self-card" class="game-btn">Положить себе</button>
+                <button id="end-turn" class="game-btn">Передать ход</button>
+            </div>
+            
+            <!-- Карты в руке игрока -->
+            <div class="player-hand">
+                <!-- Карты будут добавлены динамически через JavaScript -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Шаблоны для JavaScript -->
+    <template id="player-template">
+        <div class="player">
+            <div class="player-name">Игрок</div>
+            <div class="player-avatar">
+                <img src="img/bot-avatar.svg" alt="Аватар">
+            </div>
+            <div class="player-active-indicator"></div>
+            <div class="player-cards">Карт: 0</div>
+        </div>
+    </template>
+    
+    <template id="card-template">
+        <div class="card">
+            <div class="card-inner">
+                <div class="card-front">
+                    <div class="card-value">A</div>
+                    <div class="card-suit">♠</div>
+                </div>
+                <div class="card-back"></div>
+            </div>
+        </div>
+    </template>
+    
+    <!-- Подключение скриптов -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="js/game.js"></script>
+</body>
+</html> 

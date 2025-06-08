@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Магазин — P.I.D.R. - Punishment Inevitable: Dumb Rules</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        /* Стили для анимированных рядов карт */
+        .cards-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+            margin: 16px 0;
+            overflow: hidden;
+            height: 60px;
+        }
+        .card-anim {
+            width: 48px;
+            height: 60px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2rem;
+            animation: float 2s infinite ease-in-out alternate;
+        }
+        .card-anim:nth-child(2) { animation-delay: 0.2s; }
+        .card-anim:nth-child(3) { animation-delay: 0.4s; }
+        .card-anim:nth-child(4) { animation-delay: 0.6s; }
+        .card-anim:nth-child(5) { animation-delay: 0.8s; }
+        @keyframes float {
+            from { transform: translateY(0); }
+            to { transform: translateY(-12px); }
+        }
+        /* Слайдер товаров */
+        .shop-slider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 24px;
+            margin: 40px 0 32px 0;
+        }
+        .slider-arrow {
+            font-size: 2.5rem;
+            cursor: pointer;
+            user-select: none;
+            color: #fff;
+            background: linear-gradient(135deg, #3390ec 60%, #1bffff 100%);
+            border-radius: 50%;
+            box-shadow: 0 2px 12px rgba(51,144,236,0.18);
+            width: 54px;
+            height: 54px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #ffb347;
+            transition: background 0.2s, color 0.2s, transform 0.18s, box-shadow 0.18s;
+            margin: 0 8px;
+        }
+        .slider-arrow:hover, .slider-arrow:active {
+            background: linear-gradient(135deg, #ffb347 60%, #ffcc33 100%);
+            color: #2a9d8f;
+            transform: scale(1.13);
+            box-shadow: 0 4px 24px #ffb34755;
+            border-color: #2a9d8f;
+        }
+        .product-card {
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+            padding: 36px 24px 32px 24px;
+            min-width: 260px;
+            max-width: 340px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0 auto;
+            transition: box-shadow 0.2s, transform 0.3s;
+            will-change: transform;
+            animation: fadeIn 0.5s;
+        }
+        .product-card img {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            margin-bottom: 16px;
+        }
+        .product-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        .product-desc {
+            font-size: 1rem;
+            color: #666;
+            margin-bottom: 16px;
+        }
+        .product-price {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .buy-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+        .buy-btn {
+            background: #2a9d8f;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 24px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .buy-btn:hover { background: #21867a; }
+        .currency-list-inline {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-left: 8px;
+        }
+        .currency-inline-item {
+            background: #fffbe6;
+            border: 2px solid #ffb347;
+            border-radius: 999px;
+            width: 38px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: border 0.18s, box-shadow 0.18s, background 0.18s;
+            box-shadow: 0 2px 8px #ffb34722;
+            position: relative;
+        }
+        .currency-inline-item.selected, .currency-inline-item:active {
+            border: 2.5px solid #2a9d8f;
+            background: linear-gradient(135deg, #ffb347 60%, #fffbe6 100%);
+            box-shadow: 0 4px 16px #2a9d8f22;
+        }
+        .currency-inline-item span {
+            position: absolute;
+            bottom: -18px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.85em;
+            color: #2a9d8f;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        @media (max-width: 600px) {
+            .shop-slider { flex-direction: column; gap: 12px; }
+            .product-card { min-width: 90vw; max-width: 98vw; }
+            .container { min-height: 0; }
+            .buy-row { flex-direction: column; gap: 12px; }
+            .currency-list-inline { margin-left: 0; }
+        }
+        .back-btn {
+            display: block;
+            margin: 0 auto 18px auto;
+            background: linear-gradient(90deg, #3390ec 0%, #1bffff 100%);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            padding: 10px 28px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            box-shadow: 0 2px 10px rgba(51,144,236,0.13);
+            cursor: pointer;
+            transition: background 0.2s, transform 0.15s;
+        }
+        .back-btn:hover {
+            background: linear-gradient(90deg, #1bffff 0%, #3390ec 100%);
+            transform: scale(1.04);
+        }
+        .shop-title {
+            text-align: center;
+            margin: 0 0 12px 0;
+            color: #ffb347;
+            font-size: 2rem;
+            font-weight: 900;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 8px #2222;
+        }
+        .product-title {
+            color: #2a9d8f;
+            font-size: 1.3rem;
+            font-weight: 900;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+            text-shadow: 0 2px 8px #2a9d8f22;
+        }
+        .product-desc {
+            color: #1a4a7a;
+            font-size: 1.05rem;
+            font-weight: 500;
+            margin-bottom: 16px;
+            text-shadow: 0 1px 4px #fff8;
+        }
+        .product-price {
+            color: #ffb347;
+            font-size: 1.25rem;
+            font-weight: 900;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 8px #ffb34733;
+        }
+        .buy-btn {
+            background: linear-gradient(90deg, #43ea6d 0%, #2ecc40 100%);
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(67,234,109,0.13);
+            border: none;
+            padding: 10px 28px;
+            transition: background 0.2s, transform 0.15s;
+        }
+        .buy-btn:hover {
+            background: linear-gradient(90deg, #2e3192 0%, #1bffff 100%);
+            color: #fff;
+            transform: scale(1.04);
+        }
+        .product-card {
+            transition: box-shadow 0.2s, transform 0.3s;
+            will-change: transform;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .container {
+            max-width: 420px;
+            margin: 40px auto 0 auto;
+            padding: 24px 12px 32px 12px;
+            background: #f8fafc;
+            border-radius: 24px;
+            box-shadow: 0 8px 40px #3390ec22;
+            min-height: 600px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <button class="back-btn" onclick="window.location.href='index.html'">⬅️ В меню</button>
+        <!-- Верхний анимированный ряд карт -->
+        <div class="cards-row">
+            <img class="card-anim" src="img/cards/10_of_diamonds.png" alt="10 of diamonds">
+            <img class="card-anim" src="img/cards/6_of_hearts.png" alt="6 of hearts">
+            <img class="card-anim" src="img/cards/2_of_diamonds.png" alt="2 of diamonds">
+            <img class="card-anim" src="img/cards/back.png" alt="Back">
+            <img class="card-anim" src="img/cards/6_of_hearts.png" alt="6 of hearts">
+        </div>
+        <h2 class="shop-title">Магазин</h2>
+        <!-- Слайдер товаров -->
+        <div class="shop-slider">
+            <div class="slider-arrow" id="slider-prev">&#8592;</div>
+            <div class="product-card" id="product-card">
+                <!-- Динамически наполняется JS -->
+            </div>
+            <div class="slider-arrow" id="slider-next">&#8594;</div>
+        </div>
+        <!-- Нижний анимированный ряд карт -->
+        <div class="cards-row">
+            <img class="card-anim" src="img/cards/10_of_diamonds.png" alt="10 of diamonds">
+            <img class="card-anim" src="img/cards/6_of_hearts.png" alt="6 of hearts">
+            <img class="card-anim" src="img/cards/2_of_diamonds.png" alt="2 of diamonds">
+            <img class="card-anim" src="img/cards/back.png" alt="Back">
+            <img class="card-anim" src="img/cards/6_of_hearts.png" alt="6 of hearts">
+        </div>
+    </div>
+    <script>
+        // Список товаров
+        const products = [
+            {
+                title: 'Колода карт',
+                desc: 'Открой новую уникальную колоду для игры!',
+                price: '100',
+                img: 'https://cdn-icons-png.flaticon.com/512/1086/1086741.png',
+            },
+            {
+                title: 'Буст уровня',
+                desc: 'Мгновенно повысить уровень игрока!',
+                price: '150',
+                img: 'https://cdn-icons-png.flaticon.com/512/1828/1828919.png',
+            },
+            {
+                title: 'Премиум на месяц',
+                desc: 'Доступ к эксклюзивным функциям и скинам.',
+                price: '300',
+                img: 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png',
+            },
+            {
+                title: 'Монетка "Северная звезда"',
+                desc: 'Внутриигровая валюта для покупок.',
+                price: '50',
+                img: 'https://cdn-icons-png.flaticon.com/512/138/138292.png',
+            },
+            {
+                title: 'Рамка для аватара',
+                desc: 'Сделай свой профиль уникальным!',
+                price: '80',
+                img: 'https://cdn-icons-png.flaticon.com/512/747/747376.png',
+            },
+        ];
+        // Список валют
+        const currencies = [
+            { code: 'TON', icon: 'img/ton-icon.svg', rate: 1 },
+            { code: 'SOL', icon: 'img/solana-icon.svg', rate: 0.5 },
+            { code: 'JET', icon: 'img/jetton-icon.svg', rate: 10 },
+            { code: 'TRUMP', icon: 'img/trump-icon.svg', rate: 100 },
+        ];
+        let currentProduct = 0;
+        let currentCurrency = 0;
+        function renderProduct() {
+            const p = products[currentProduct];
+            const c = currencies[currentCurrency];
+            const approx = (p.price / c.rate).toFixed(2);
+            document.getElementById('product-card').innerHTML = `
+                <img src="${p.img}" alt="${p.title}">
+                <div class="product-title">${p.title}</div>
+                <div class="product-desc">${p.desc}</div>
+                <div class="product-price">${p.price} ₽ ≈ ${approx} <img src="${c.icon}" alt="${c.code}" style="width:22px;vertical-align:middle;"></div>
+                <div class="buy-row">
+                    <button class="buy-btn">Купить</button>
+                    <div class="currency-list-inline">
+                        ${currencies.map((cur, i) => `
+                            <div class="currency-inline-item${i === currentCurrency ? ' selected' : ''}" data-idx="${i}">
+                                <img src="${cur.icon}" alt="${cur.code}" style="width:22px;">
+                                <span>≈ ${(p.price / cur.rate).toFixed(2)}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+            document.querySelectorAll('.currency-inline-item').forEach(item => {
+                item.onclick = (e) => {
+                    currentCurrency = +item.dataset.idx;
+                    renderProduct();
+                };
+            });
+        }
+        document.getElementById('slider-prev').onclick = () => {
+            currentProduct = (currentProduct - 1 + products.length) % products.length;
+            renderProduct();
+        };
+        document.getElementById('slider-next').onclick = () => {
+            currentProduct = (currentProduct + 1) % products.length;
+            renderProduct();
+        };
+        renderProduct();
+    </script>
+</body>
+</html> 

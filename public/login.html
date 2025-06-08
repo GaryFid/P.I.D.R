@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>P.I.D.R. - Вход</title>
+    <style>
+        :root {
+            --primary-color: #1976D2;
+            --primary-dark: #1565C0;
+            --primary-light: #2196F3;
+            --error-color: #f44336;
+            --success-color: #4CAF50;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-light) 100%);
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 400px;
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .logo h1 {
+            font-size: 32px;
+            color: var(--primary-color);
+            margin-bottom: 8px;
+        }
+
+        .logo p {
+            color: #666;
+            font-size: 16px;
+            line-height: 1.4;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+        }
+
+        .form-group input.error {
+            border-color: var(--error-color);
+        }
+
+        .error-message {
+            color: var(--error-color);
+            font-size: 14px;
+            margin-top: 4px;
+            display: none;
+        }
+
+        .error-message.visible {
+            display: block;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--primary-color);
+            margin-top: 12px;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(33, 150, 243, 0.1);
+        }
+
+        .divider {
+            text-align: center;
+            margin: 24px 0;
+            position: relative;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 45%;
+            height: 1px;
+            background: #e0e0e0;
+        }
+
+        .divider::before {
+            left: 0;
+        }
+
+        .divider::after {
+            right: 0;
+        }
+
+        .divider span {
+            background: white;
+            padding: 0 10px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .telegram-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: #0088cc;
+            color: white;
+            padding: 14px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            border: none;
+        }
+
+        .telegram-btn:hover {
+            background: #006699;
+        }
+
+        .telegram-btn img {
+            width: 24px;
+            height: 24px;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 24px;
+            }
+
+            .logo h1 {
+                font-size: 28px;
+            }
+
+            .form-group input,
+            .btn {
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <h1>P.I.D.R.</h1>
+            <p>Punishment Inevitable: Dumb Rules<br>Карточная битва без пощады!</p>
+        </div>
+
+        <form id="login-form">
+            <div class="form-group">
+                <label for="username">Логин</label>
+                <input type="text" id="username" name="username" required>
+                <div class="error-message" id="username-error"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Пароль</label>
+                <input type="password" id="password" name="password" required>
+                <div class="error-message" id="password-error"></div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Войти</button>
+            <button type="button" class="btn btn-secondary" id="register-btn">Создать аккаунт</button>
+        </form>
+
+        <div class="divider">
+            <span>или</span>
+        </div>
+
+        <button class="telegram-btn" id="telegram-login">
+            <img src="/img/telegram-logo.png" alt="Telegram">
+            Войти через Telegram
+        </button>
+    </div>
+
+    <div id="login-loader" style="display:none; text-align:center; margin-top:32px;">
+        <div class="loader"></div>
+        <div style="margin-top:12px; color:#2196f3; font-size:1.1em;">Выполняется вход...</div>
+    </div>
+
+    <script>
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            // Очищаем предыдущие ошибки
+            document.querySelectorAll('.error-message').forEach(el => {
+                el.textContent = '';
+                el.classList.remove('visible');
+            });
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const loginLoader = document.getElementById('login-loader');
+            if (loginLoader) loginLoader.style.display = '';
+            
+            try {
+                const response = await fetch('/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({ username, password })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success && data.user && data.user.id && data.user.username) {
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    window.location.replace('/index.html');
+                } else {
+                    showError('username', data.error || 'Ошибка входа');
+                }
+            } catch (error) {
+                showError('username', 'Ошибка сервера. Попробуйте позже.');
+            } finally {
+                if (loginLoader) loginLoader.style.display = 'none';
+            }
+        });
+
+        document.getElementById('register-btn').addEventListener('click', () => {
+            window.location.href = '/register.html';
+        });
+
+        document.getElementById('telegram-login').addEventListener('click', () => {
+            window.location.href = '/auth/telegram';
+        });
+
+        function showError(field, message) {
+            const errorElement = document.getElementById(`${field}-error`);
+            errorElement.textContent = message;
+            errorElement.classList.add('visible');
+            document.getElementById(field).classList.add('error');
+        }
+
+        // Убираем класс error при фокусе на поле
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('focus', () => {
+                input.classList.remove('error');
+                const errorElement = document.getElementById(`${input.id}-error`);
+                if (errorElement) {
+                    errorElement.classList.remove('visible');
+                }
+            });
+        });
+    </script>
+</body>
+</html> 

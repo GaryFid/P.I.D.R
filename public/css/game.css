@@ -1,0 +1,1203 @@
+/* Основные стили для игровой страницы */
+body {
+    overflow: hidden;
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    background-color: var(--tg-theme-bg-color);
+    color: var(--tg-theme-text-color);
+}
+
+.game-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Стили для игрового стола */
+.table-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.table-overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: transparent !important;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.table {
+    position: relative;
+    width: 90%;
+    height: 80%;
+    background-color: #076324; /* Зеленый цвет стола */
+    border-radius: 50%;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.oval-table {
+    border-radius: 200px / 120px; /* Овальная форма */
+}
+
+/* Колода карт */
+.card-deck {
+    position: absolute;
+    z-index: 10;
+    display: flex;
+    gap: 20px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+}
+
+.card-pile {
+    position: relative;
+    width: 70px;
+    height: 100px;
+    z-index: 11;
+    pointer-events: auto;
+}
+
+.card-pile.deck {
+    transform: rotate(-5deg);
+}
+
+.card-pile.discard {
+    transform: rotate(5deg);
+}
+
+.card-count {
+    position: absolute;
+    bottom: -15px;
+    right: -5px;
+    background-color: var(--tg-theme-button-color);
+    color: var(--tg-theme-button-text-color);
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 12px;
+    font-weight: bold;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+/* Стили для игроков */
+.players-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 3 !important;
+    pointer-events: none;
+}
+
+.player {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: all 0.3s ease;
+    z-index: 3;
+    pointer-events: auto; /* Разрешаем взаимодействие с игроком */
+    transform: translate(-50%, -50%); /* Центрирование относительно позиции */
+}
+
+.player-name {
+    margin-bottom: 5px;
+    font-size: 12px;
+    background-color: rgba(255,255,255,0.8);
+    color: #333;
+    padding: 2px 8px;
+    border-radius: 10px;
+    max-width: 100px;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.player-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #ddd;
+    overflow: hidden;
+    border: 2px solid white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.player-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.player-cards {
+    margin-top: 5px;
+    font-size: 12px;
+    background-color: rgba(0,0,0,0.5);
+    color: white;
+    padding: 2px 6px;
+    border-radius: 10px;
+}
+
+.player-active-indicator {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 3px solid var(--tg-theme-button-color);
+    top: -5px;
+    left: -5px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.player.active .player-active-indicator {
+    opacity: 1;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 0.8; }
+    50% { transform: scale(1.1); opacity: 0.4; }
+    100% { transform: scale(1); opacity: 0.8; }
+}
+
+/* Стили для карт в руках игроков */
+.player-table-cards {
+    position: relative;
+    margin-top: 10px;
+    min-height: 60px;
+    min-width: 40px;
+}
+
+.table-card {
+    position: absolute;
+    width: 40px;
+    height: 60px;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    border: 1px solid #ccc;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 3px;
+    top: 0;
+    left: 0;
+    transition: transform 0.3s ease;
+    transform-origin: center bottom;
+}
+
+.table-card.card-front {
+    background-color: white;
+}
+
+.table-card.card-back {
+    background-color: #f8f8f8;
+    background-image: url('../img/card-back.svg');
+    background-size: 100% 100%;
+}
+
+.table-card .card-value {
+    font-size: 10px;
+    font-weight: bold;
+}
+
+.table-card .card-suit {
+    font-size: 12px;
+}
+
+.table-card.red {
+    color: #e53935;
+}
+
+/* Стили для карт */
+.card {
+    width: 70px;
+    height: 100px;
+    position: relative;
+    cursor: pointer;
+    perspective: 1000px;
+    border-radius: 8px;
+    background-color: white;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    transition: transform 0.2s;
+}
+
+.card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+}
+
+.card.flipped .card-inner {
+    transform: rotateY(180deg);
+}
+
+.card-front, .card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.card-front {
+    background-color: white;
+    color: black;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.card-front.red {
+    color: red;
+}
+
+.card-back {
+    background-color: #b00;
+    background-image: linear-gradient(135deg, #b00 25%, #d00 25%, #d00 50%, #b00 50%, #b00 75%, #d00 75%, #d00);
+    background-size: 20px 20px;
+    transform: rotateY(180deg);
+}
+
+.card-value {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.card-suit {
+    font-size: 28px;
+    margin-top: 5px;
+}
+
+/* Стили для панели управления */
+.game-controls {
+    background-color: rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(255,255,255,0.2);
+    padding: 15px;
+    position: relative;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+}
+
+.current-player-info {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.avatar-container {
+    position: relative;
+    margin-right: 10px;
+}
+
+.player-indicator {
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--tg-theme-button-color);
+    color: var(--tg-theme-button-text-color);
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 10px;
+    white-space: nowrap;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.game-btn {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    background-color: var(--tg-theme-button-color);
+    color: var(--tg-theme-button-text-color);
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.game-btn:hover:not(:disabled) {
+    opacity: 0.9;
+    transform: translateY(-2px);
+}
+
+.game-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.game-btn.warning {
+    background-color: #f44336;
+}
+
+.player-hand {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 0;
+    overflow-x: auto;
+    padding: 18px 0 8px 0;
+    min-height: 90px;
+    justify-content: center;
+    align-items: flex-end;
+    position: relative;
+    background: none;
+}
+
+.hand-card {
+    position: relative;
+    width: 70px;
+    height: 100px;
+    margin-right: -38px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.18);
+    background: #fff;
+    transition: box-shadow 0.2s, transform 0.2s, z-index 0.2s;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+}
+
+.hand-card img.card-image, .hand-card img.card-back-image {
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+    object-fit: contain;
+    box-shadow: none;
+}
+
+.hand-card.selected {
+    box-shadow: 0 8px 24px rgba(51,144,236,0.25), 0 2px 10px rgba(0,0,0,0.18);
+    transform: translateY(-24px) scale(1.08);
+    z-index: 300 !important;
+}
+
+.hand-card:hover:not(.selected) {
+    box-shadow: 0 4px 16px rgba(51,144,236,0.18), 0 2px 10px rgba(0,0,0,0.13);
+    transform: translateY(-12px) scale(1.04);
+    z-index: 200;
+}
+
+@media (max-width: 600px) {
+    .hand-card {
+        width: 48px;
+        height: 68px;
+        margin-right: -28px;
+    }
+    .player-hand {
+        min-height: 60px;
+    }
+}
+
+/* Стиль для выбранной карты */
+.card.selected {
+    transform: translateY(-20px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+    z-index: 10;
+}
+
+.card.playable:hover {
+    box-shadow: 0 0 15px 4px var(--tg-theme-button-color);
+    transform: translateY(-15px);
+}
+
+/* Стили для модального окна */
+.game-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.7);
+    z-index: 10;
+    justify-content: center;
+    align-items: center;
+}
+
+.game-modal.visible {
+    display: flex;
+}
+
+.modal-content {
+    background-color: var(--tg-theme-bg-color);
+    border-radius: 12px;
+    width: 80%;
+    max-width: 400px;
+    max-height: 80%;
+    overflow-y: auto;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+}
+
+.modal-header {
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+}
+
+.modal-header h3 {
+    margin: 0;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: var(--tg-theme-text-color);
+    opacity: 0.6;
+}
+
+.close-btn:hover {
+    opacity: 1;
+}
+
+.modal-body {
+    padding: 15px;
+}
+
+.setting-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding: 8px 0;
+}
+
+.settings-btn {
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: rgba(255,255,255,0.2);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255,255,255,0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    z-index: 5;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.settings-icon {
+    font-size: 20px;
+}
+
+/* Стили для анимации раздачи карт */
+@keyframes dealCard {
+    0% {
+        transform: translate(-50%, -50%) scale(0.5) rotate(0deg);
+        opacity: 0;
+    }
+    100% {
+        transform: translate(0, 0) scale(1) rotate(var(--rotate-angle));
+        opacity: 1;
+    }
+}
+
+.dealing {
+    animation: dealCard 0.5s forwards ease-out;
+}
+
+/* Стили для сообщений игры */
+.game-message {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.8);
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 15px 25px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    max-width: 80%;
+    z-index: 1000;
+    opacity: 0;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.game-message.visible {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+/* Стили для информации о стадии игры */
+.game-stage-info {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 5;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.stage-number {
+    font-weight: bold;
+    font-size: 14px;
+    margin-bottom: 2px;
+}
+
+.stage-description {
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+/* Подсветка карты, которую можно сыграть */
+.card.playable {
+    box-shadow: 0 0 10px 2px var(--tg-theme-button-color);
+    transform: translateY(-10px);
+}
+
+/* Подсветка возможных целей для игры */
+.table-card.highlighted {
+    box-shadow: 0 0 15px 3px gold;
+    transform: scale(1.1) !important;
+    z-index: 10;
+    border: 2px solid gold;
+    animation: pulse-target 1.5s infinite;
+}
+
+@keyframes pulse-target {
+    0% { box-shadow: 0 0 15px 3px gold; }
+    50% { box-shadow: 0 0 20px 5px gold; }
+    100% { box-shadow: 0 0 15px 3px gold; }
+}
+
+/* Адаптивность */
+@media (max-width: 480px) {
+    .card {
+        width: 60px;
+        height: 85px;
+    }
+    
+    .card-value {
+        font-size: 20px;
+    }
+    
+    .card-suit {
+        font-size: 24px;
+    }
+    
+    .player-avatar {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .player-active-indicator {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .table-card {
+        width: 35px;
+        height: 50px;
+    }
+    
+    .game-message {
+        font-size: 14px;
+        padding: 12px 20px;
+    }
+    
+    .player-name {
+        font-size: 10px;
+        max-width: 70px;
+        margin-bottom: 3px;
+    }
+}
+
+/* Стили для индикатора хода */
+.turn-timer {
+    position: absolute;
+    bottom: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    height: 4px;
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.turn-timer-progress {
+    height: 100%;
+    width: 100%;
+    background-color: var(--tg-theme-button-color);
+    transform-origin: left;
+    transform: scaleX(0);
+    transition: transform 0.1s linear;
+}
+
+.turn-timer.active .turn-timer-progress {
+    animation: timer-countdown 15s linear forwards;
+}
+
+@keyframes timer-countdown {
+    0% { transform: scaleX(1); }
+    100% { transform: scaleX(0); }
+}
+
+/* Стили для карт в колоде */
+.mini-card {
+    width: 50px;
+    height: 70px;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    background: #fff url('../img/cards/back.png') center/cover no-repeat !important;
+    border: 2px solid #e0e0e0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 12;
+}
+
+.card-image, .card-back-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 5px;
+    display: block;
+}
+
+.card-pile.deck .mini-card {
+    background: #b00;
+    background-image: linear-gradient(135deg, #b00 25%, #d00 25%, #d00 50%, #b00 50%, #b00 75%, #d00 75%, #d00);
+    background-size: 10px 10px;
+}
+
+.card-pile.discard .mini-card {
+    background: #fff;
+}
+
+/* Стили для модального окна правил */
+.rules-content {
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.rules-body {
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.rules-body h4 {
+    margin-top: 20px;
+    margin-bottom: 10px;
+    color: var(--tg-theme-button-color);
+}
+
+.rules-body p, .rules-body ul {
+    margin-bottom: 10px;
+}
+
+.rules-body ul {
+    padding-left: 20px;
+}
+
+.rules-body li {
+    margin-bottom: 5px;
+}
+
+/* Дополнительный отступ для кнопки правил в настройках */
+#show-rules {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+/* Анимации для карт */
+.card-flip {
+    animation: flip 0.5s ease forwards;
+}
+
+.card-slide {
+    animation: slide 0.5s ease forwards;
+}
+
+@keyframes flip {
+    0% { transform: rotateY(0deg); }
+    50% { transform: rotateY(90deg); }
+    100% { transform: rotateY(180deg); }
+}
+
+@keyframes slide {
+    0% { transform: translateX(0) translateY(0); }
+    100% { transform: translateX(var(--slide-x, 0)) translateY(var(--slide-y, 0)); }
+}
+
+/* Добавляем стили для таймера хода */
+.timer-bar {
+    width: 100%;
+    height: 4px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+    margin: 5px 0;
+    overflow: hidden;
+}
+
+.timer-progress {
+    height: 100%;
+    background-color: #3390ec;
+    width: 100%;
+    transition: width 15s linear;
+}
+
+/* Стили для кнопок в отключенном состоянии */
+.game-btn.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Стили для drag-and-drop функциональности */
+.card.dragging {
+    opacity: 0.8;
+    transform: scale(1.05);
+    cursor: grabbing;
+}
+
+.player.drag-target {
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
+    transform: scale(1.05);
+    z-index: 100;
+}
+
+.self-drop-target {
+    box-shadow: 0 0 15px rgba(51, 153, 255, 0.7);
+    border-radius: 10px;
+    transform: scale(1.05);
+    z-index: 100;
+}
+
+/* Специальные стили для колоды и сброса на разных стадиях игры */
+.stage1-discard {
+    border: 2px solid gold !important;
+    box-shadow: 0 0 10px gold !important;
+}
+
+.stage2-empty-discard {
+    border: 2px dashed rgba(255, 215, 0, 0.5) !important;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3) !important;
+    animation: pulse-discard 2s infinite;
+}
+
+@keyframes pulse-discard {
+    0% { box-shadow: 0 0 10px rgba(255, 215, 0, 0.3); }
+    50% { box-shadow: 0 0 15px rgba(255, 215, 0, 0.6); }
+    100% { box-shadow: 0 0 10px rgba(255, 215, 0, 0.3); }
+}
+
+/* Улучшенные стили для колоды карт */
+.card-pile.deck .mini-card {
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s ease;
+}
+
+/* Удаляю эффект появления колоды только при наведении */
+/* .card-pile.deck:hover .mini-card { transform: translateY(-2px); } */
+
+.card-pile.discard .mini-card {
+    transition: all 0.3s ease;
+}
+
+.card-pile.discard .mini-card:hover {
+    transform: scale(1.1);
+    cursor: pointer;
+}
+
+/* Улучшения для мини-карт */
+.mini-card {
+    width: 50px;
+    height: 70px;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    transition: transform 0.2s;
+}
+
+.mini-card.card-back {
+    background-color: #b00;
+    background-image: linear-gradient(135deg, #b00 25%, #d00 25%, #d00 50%, #b00 50%, #b00 75%, #d00 75%, #d00);
+    background-size: 10px 10px;
+}
+
+/* Стили для перетаскиваемых элементов */
+[draggable="true"] {
+    cursor: grab;
+}
+
+[draggable="true"]:active {
+    cursor: grabbing;
+}
+
+/* Стили для изображений карт */
+.card-image, .card-back-image {
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+    object-fit: contain;
+}
+
+.mini-card .card-image, .mini-card .card-back-image {
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+}
+
+.table-card .card-image, .table-card .card-back-image {
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+}
+
+/* Анимация для карт с изображениями */
+.card.selected .card-image,
+.card.selected .card-back-image {
+    box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+}
+
+/* Анимация раздачи карт */
+.card.dealing {
+    animation: dealCard 0.35s cubic-bezier(0.4, 0.8, 0.2, 1);
+    z-index: 10;
+}
+@keyframes dealCard {
+    0% { transform: scale(0.7) translateY(-40px); opacity: 0; }
+    100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+/* Визуализация закрытых и открытых карт */
+.card-front {
+    background: #fff;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.13);
+    border: 1.5px solid #3390ec;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0; left: 0;
+    z-index: 2;
+}
+.card-back {
+    background: url('../img/card-back.svg') center/cover no-repeat, #3390ec;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.13);
+    border: 1.5px solid #3390ec;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0; left: 0;
+    z-index: 3;
+}
+.card:not(.flipped) .card-back {
+    display: block;
+}
+.card.flipped .card-back {
+    display: none;
+}
+.card.flipped .card-front {
+    display: block;
+}
+.card:not(.flipped) .card-front {
+    display: none;
+}
+
+.card.mini-card[title*="Колода пуста"] {
+    border: 2px dashed #e0e0e0 !important;
+    background-color: #fff !important;
+}
+
+.card-pile.deck, .card-pile.discard {
+    z-index: 4 !important;
+}
+
+/* Бургер-меню */
+.burger-menu {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    cursor: pointer;
+}
+
+.burger-icon {
+    width: 35px;
+    height: 25px;
+    position: relative;
+    cursor: pointer;
+}
+
+.burger-icon span {
+    display: block;
+    position: absolute;
+    height: 3px;
+    width: 100%;
+    background: #fff;
+    border-radius: 3px;
+    transition: all 0.3s ease;
+}
+
+.burger-icon span:nth-child(1) { top: 0; }
+.burger-icon span:nth-child(2) { top: 11px; }
+.burger-icon span:nth-child(3) { top: 22px; }
+
+.burger-icon.active span:nth-child(1) {
+    transform: rotate(45deg);
+    top: 11px;
+}
+
+.burger-icon.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.burger-icon.active span:nth-child(3) {
+    transform: rotate(-45deg);
+    top: 11px;
+}
+
+/* Боковое меню */
+.side-menu {
+    position: fixed;
+    top: 0;
+    right: -300px;
+    width: 300px;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+    transition: right 0.3s ease;
+    z-index: 999;
+    padding: 60px 0 20px;
+}
+
+.side-menu.active {
+    right: 0;
+}
+
+/* Список друзей */
+.friends-list {
+    padding: 0 20px;
+}
+
+.friends-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 2px solid #2196f3;
+    margin-bottom: 15px;
+}
+
+.friends-title {
+    font-size: 1.2em;
+    font-weight: 700;
+    color: #1e3c72;
+}
+
+.add-friend-btn {
+    background: #2196f3;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.add-friend-btn:hover {
+    background: #1976d2;
+}
+
+.friend-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    transition: background 0.2s;
+}
+
+.friend-item:hover {
+    background: #f5f5f5;
+}
+
+.friend-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+    object-fit: cover;
+}
+
+.friend-info {
+    flex-grow: 1;
+}
+
+.friend-name {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 2px;
+}
+
+.friend-status {
+    font-size: 0.8em;
+    color: #666;
+}
+
+.friend-status.online {
+    color: #4caf50;
+}
+
+.friend-status.offline {
+    color: #9e9e9e;
+}
+
+.friend-actions {
+    display: flex;
+    gap: 5px;
+}
+
+.friend-action-btn {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: all 0.2s;
+}
+
+.invite-btn {
+    background: #4caf50;
+    color: white;
+}
+
+.invite-btn:hover {
+    background: #388e3c;
+}
+
+.play-btn {
+    background: #ff9800;
+    color: white;
+}
+
+.play-btn:hover {
+    background: #f57c00;
+}
+
+/* Модальное окно добавления друга */
+.add-friend-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1001;
+    justify-content: center;
+    align-items: center;
+}
+
+.add-friend-modal.active {
+    display: flex;
+}
+
+.modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 400px;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.modal-title {
+    font-size: 1.2em;
+    font-weight: 700;
+    color: #1e3c72;
+}
+
+.close-modal {
+    background: none;
+    border: none;
+    font-size: 1.5em;
+    cursor: pointer;
+    color: #666;
+}
+
+.friend-search {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+
+.search-results {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.no-results {
+    text-align: center;
+    color: #666;
+    padding: 20px;
+} 

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Настройка игры - P.I.D.R. - Punishment Inevitable: Dumb Rules</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/game-setup.css">
+    <link rel="stylesheet" href="/css/modal.css">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>P.I.D.R. - Punishment Inevitable: Dumb Rules</h1>
+            <p>Настройка игры</p>
+        </header>
+        
+        <main>
+            <div class="setup-container">
+                <div class="setup-title">
+                    <h2>Выберите стол для игры</h2>
+                </div>
+                
+                <div class="table-selection">
+                    <div class="table-row">
+                        <div class="oval-table" data-players="4">
+                            <div class="table-top">4</div>
+                            <div class="table-seats">
+                                <div class="seat"></div>
+                                <div class="seat"></div>
+                                <div class="seat"></div>
+                                <div class="seat"></div>
+                            </div>
+                        </div>
+                        <div class="oval-table" data-players="5">
+                            <div class="table-top">5</div>
+                            <div class="table-seats">
+                                <div class="seat"></div>
+                                <div class="seat"></div>
+                                <div class="seat"></div>
+                                <div class="seat"></div>
+                                <div class="seat"></div>
+                            </div>
+                        </div>
+                        <div class="oval-table" data-players="6">
+                            <div class="table-top">6</div>
+                            <div class="table-seats">
+                                <div class="seat"></div>
+                                <div class="seat"></div>
+                                <div class="seat"></div>
+                                <div class="seat"></div>
+                                <div class="seat"></div>
+                                <div class="seat"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-row">
+                        <div class="oval-table" data-players="7">
+                            <div class="table-top">7</div>
+                            <div class="table-seats">
+                                <div class="seat"></div>
+                                <div class="seat"></div>
+                                <div class="seat"></div>
+                                <div class="seat"></div>
+                                <div class="seat"></div>
+                                <div class="seat"></div>
+                                <div class="seat"></div>
+                            </div>
+                        </div>
+                        <div class="oval-table" data-players="8">
+                            <div class="table-top">8</div>
+                            <div class="table-seats">
+                                <div class="seat"></div>
+                                <div class="seat"></div>
+                                <div class="seat"></div>
+                                <div class="seat"></div>
+                                <div class="seat"></div>
+                                <div class="seat"></div>
+                                <div class="seat"></div>
+                                <div class="seat"></div>
+                            </div>
+                        </div>
+                        <div class="oval-table" data-players="9">
+                            <div class="table-top">9</div>
+                            <div class="table-seats">
+                                <div class="seat"></div>
+                                <div class="seat"></div>
+                                <div class="seat"></div>
+                                <div class="seat"></div>
+                                <div class="seat"></div>
+                                <div class="seat"></div>
+                                <div class="seat"></div>
+                                <div class="seat"></div>
+                                <div class="seat"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="game-options">
+                    <h3>Дополнительные настройки</h3>
+                    <div class="option-item">
+                        <label for="with-ai">Добавить ботов</label>
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="with-ai">
+                            <span class="toggle-slider"></span>
+                        </div>
+                    </div>
+                    <div class="option-item">
+                        <label for="ai-test-mode">Режим тестирования с ИИ</label>
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="ai-test-mode">
+                            <span class="toggle-slider"></span>
+                        </div>
+                    </div>
+                    <div class="option-item">
+                        <button id="rules-btn" class="btn btn-secondary">Правила игры</button>
+                    </div>
+                </div>
+                
+                <div class="action-buttons">
+                    <button id="start-game-btn" class="btn btn-primary">Начать игру</button>
+                    <button id="back-btn" class="btn btn-secondary">Назад</button>
+                </div>
+            </div>
+        </main>
+        
+        <footer>
+            <p>© 2025 P.I.D.R. - Punishment Inevitable: Dumb Rules</p>
+        </footer>
+    </div>
+
+    <script src="js/game-setup.js"></script>
+</body>
+</html> 
