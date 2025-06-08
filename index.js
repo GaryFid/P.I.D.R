@@ -188,7 +188,7 @@ async function startApp() {
 
     // Основные маршруты для веб-приложения
     app.get('/', (req, res) => {
-      res.redirect('/webapp');
+      res.sendFile(path.join(__dirname, 'public', 'index.html'));
     });
 
     app.get('/webapp', (req, res) => {
