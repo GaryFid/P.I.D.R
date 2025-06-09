@@ -2,10 +2,9 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>P.I.D.R. - Punishment Inevitable: Dumb Rules</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="/css/modal.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>P.I.D.R. Game</title>
+    <link rel="stylesheet" href="css/telegram.css">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
     .profile-dropdown {
@@ -162,64 +161,70 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <div class="header-top">
-                <div class="header-actions">
-                    <div class="menu-friends-button">
-                        <div class="menu-icon">
-                            <i class="fas fa-bars"></i>
-                        </div>
-                    </div>
-                    <div class="wallet-block" id="wallet-block">
-                        <button class="wallet-btn" id="wallet-btn">
-                            <img src="img/ton-icon.svg" alt="TON" class="crypto-icon">
-                            <span class="wallet-balance">0.00</span>
-                        </button>
-                    </div>
-                    <div class="profile-block" id="profile-block">
-                        <img src="img/player-avatar.svg" alt="Профиль" class="profile-avatar">
-                        <span class="profile-name" id="profile-name">Гость</span>
-                        <span class="profile-id" id="profile-id"></span>
-                    </div>
-                </div>
+    <div class="app-container">
+        <!-- Профиль -->
+        <div class="profile-section animate-fade-in">
+            <img id="profile-avatar" class="profile-avatar" src="img/avatar-default.png" alt="Аватар">
+            <div class="profile-info">
+                <h2 id="profile-name" class="profile-name">Загрузка...</h2>
+                <p id="profile-id" class="profile-id"></p>
             </div>
-            <h1 style="text-align:center;margin:18px 0 0 0;font-size:1.5em;color:var(--emerald-dark);font-weight:900;letter-spacing:1px;">P.I.D.R. — Dumb Rules</h1>
-            <p style="text-align:center;color:var(--gold-dark);margin:0 0 8px 0;font-size:1.08em;">Punishment Inevitable: Dumb Rules</p>
-        </header>
-        <main>
-            <div class="card-menu">
-                <div class="menu-item" id="start-game">
-                    <div class="menu-icon">🎮</div>
-                    <div class="menu-text">Начать игру</div>
-                </div>
-                <div class="menu-item" id="play-ai">
-                    <div class="menu-icon">🤖</div>
-                    <div class="menu-text">Играть с ИИ</div>
-                </div>
-                <div class="menu-item" id="rating">
-                    <div class="menu-icon">🏆</div>
-                    <div class="menu-text">Рейтинг</div>
-                </div>
-                <div class="menu-item menu-item-shop" id="shop">
-                    <div class="menu-icon">🛒</div>
-                    <div class="menu-text">Магазин</div>
-                </div>
-                <div class="menu-item" id="rules">
-                    <div class="menu-icon">📋</div>
-                    <div class="menu-text">Правила</div>
-                </div>
-                <div class="menu-item" id="profile-page-btn">
-                    <div class="menu-icon">👤</div>
-                    <div class="menu-text">Профиль</div>
-                </div>
+        </div>
+
+        <!-- Основное меню -->
+        <div class="menu-container">
+            <div class="menu-item animate-fade-in" id="start-game">
+                <div class="menu-icon">🎮</div>
+                <div class="menu-text">Начать игру</div>
             </div>
-        </main>
-        <footer>
-            <p>© 2025 P.I.D.R. - Punishment Inevitable: Dumb Rules</p>
-        </footer>
+            
+            <div class="menu-item animate-fade-in" id="play-ai">
+                <div class="menu-icon">🤖</div>
+                <div class="menu-text">Играть с ИИ</div>
+            </div>
+            
+            <div class="menu-item animate-fade-in" id="rating">
+                <div class="menu-icon">🏆</div>
+                <div class="menu-text">Рейтинг</div>
+            </div>
+            
+            <div class="menu-item animate-fade-in" id="shop">
+                <div class="menu-icon">🛒</div>
+                <div class="menu-text">Магазин</div>
+            </div>
+            
+            <div class="menu-item animate-fade-in" id="rules">
+                <div class="menu-icon">📋</div>
+                <div class="menu-text">Правила</div>
+            </div>
+            
+            <div class="menu-item animate-fade-in" id="profile-page-btn">
+                <div class="menu-icon">👤</div>
+                <div class="menu-text">Профиль</div>
+            </div>
+        </div>
     </div>
-    
+
+    <!-- Нижнее меню -->
+    <div class="bottom-menu">
+        <a href="#" class="bottom-menu-item active" id="menu-home">
+            <div class="bottom-menu-icon">🏠</div>
+            <span>Меню</span>
+        </a>
+        <a href="#" class="bottom-menu-item" id="menu-friends">
+            <div class="bottom-menu-icon">👥</div>
+            <span>Друзья</span>
+        </a>
+        <a href="#" class="bottom-menu-item" id="menu-profile">
+            <div class="bottom-menu-icon">👤</div>
+            <span>Профиль</span>
+        </a>
+        <a href="#" class="bottom-menu-item" id="menu-rules">
+            <div class="bottom-menu-icon">📋</div>
+            <span>Правила</span>
+        </a>
+    </div>
+
     <script src="js/main.js"></script>
     <script>
     // --- Удалить checkAuth и logout ---

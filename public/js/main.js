@@ -18,56 +18,53 @@ window.addEventListener('DOMContentLoaded', async function() {
     loader.style = 'position:fixed;left:0;top:0;width:100vw;height:100vh;background:rgba(255,255,255,0.95);z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column;';
     loader.innerHTML = '<div class="loader" style="border:6px solid #f3f3f3;border-top:6px solid #2196f3;border-radius:50%;width:48px;height:48px;animation:spin 1s linear infinite;"></div><div style="margin-top:18px;color:#2196f3;font-size:1.2em;">Проверка авторизации...</div>';
     document.body.appendChild(loader);
-    try {
-        var user = localStorage.getItem('user');
-        var userData = user ? JSON.parse(user) : null;
-        console.log('[main.js] Проверка localStorage user:', userData);
-        if (userData && userData.id && userData.username) {
-            if (window.showToast) window.showToast('Авторизация по localStorage', 'success');
-            console.log('[main.js] Авторизация по localStorage:', userData);
-            document.body.removeChild(loader);
-            return;
-        }
-        // Если не авторизован — редирект на регистрацию
-        if (window.showToast) window.showToast('Не авторизован, редирект', 'error');
-        console.warn('[main.js] Не авторизован, редирект на регистрацию');
-        localStorage.removeItem('user');
-        // window.location.replace('/register.html'); // Удалено
-    } catch (error) {
-        if (window.showToast) window.showToast('Ошибка проверки авторизации', 'error');
-        console.error('[main.js] Ошибка проверки авторизации:', error);
-        localStorage.removeItem('user');
-        // window.location.replace('/register.html'); // Удалено
-    }
 
-    console.log('[main.js] Старт авторизации через Telegram WebApp');
-    if (window.Telegram && window.Telegram.WebApp && Telegram.WebApp.initDataUnsafe && Telegram.WebApp.initDataUnsafe.user) {
-        const tgUser = Telegram.WebApp.initDataUnsafe.user;
-        console.log('[main.js] Данные Telegram:', tgUser);
-        try {
-            const resp = await fetch('/api/telegram-auth', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    id: tgUser.id,
-                    username: tgUser.username,
-                    first_name: tgUser.first_name,
-                    last_name: tgUser.last_name,
-                    photo_url: tgUser.photo_url
-                })
-            });
-            console.log('[main.js] Ответ от /api/telegram-auth:', resp);
-            const data = await resp.json();
-            console.log('[main.js] JSON от /api/telegram-auth:', data);
-            if (data.success && data.user) {
-                localStorage.setItem('user', JSON.stringify(data.user));
-                const profileName = document.getElementById('profile-name');
-                const profileId = document.getElementById('profile-id');
-                if (profileName) profileName.textContent = data.user.username || 'Игрок';
-                if (profileId) profileId.textContent = 'ID: ' + (data.user.id || tgUser.id);
-                console.log('[main.js] Пользователь авторизован, переход к меню');
-            } else {
-                console.warn('[main.js] Не удалось авторизовать пользователя через Telegram:', data);
+    try {
+        // Проверяем данные из Telegram WebApp
+        if (window.Telegram && window.Telegram.WebApp && Telegram.WebApp.initDataUnsafe && Telegram.WebApp.initDataUnsafe.user) {
+            const tgUser = Telegram.WebApp.initDataUnsafe.user;
+            console.log('[main.js] Данные Telegram:', tgUser);
+
+            try {
+                const resp = await fetch('/api/telegram-auth', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        id: tgUser.id,
+                        username: tgUser.username,
+                        first_name: tgUser.first_name,
+                        last_name: tgUser.last_name,
+                        photo_url: tgUser.photo_url
+                    })
+                });
+
+                console.log('[main.js] Ответ от /api/telegram-auth:', resp);
+                const data = await resp.json();
+                console.log('[main.js] JSON от /api/telegram-auth:', data);
+
+                if (data.success && data.user) {
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    const profileName = document.getElementById('profile-name');
+                    const profileId = document.getElementById('profile-id');
+                    if (profileName) profileName.textContent = data.user.username || 'Игрок';
+                    if (profileId) profileId.textContent = 'ID: ' + (data.user.id || tgUser.id);
+                    console.log('[main.js] Пользователь авторизован');
+                } else {
+                    console.warn('[main.js] Не удалось авторизовать пользователя через Telegram:', data);
+                    const profileName = document.getElementById('profile-name');
+                    const profileId = document.getElementById('profile-id');
+                    if (profileName) profileName.textContent = tgUser.username || tgUser.first_name || 'Игрок';
+                    if (profileId) profileId.textContent = 'ID: ' + tgUser.id;
+                    localStorage.setItem('user', JSON.stringify({
+                        id: tgUser.id,
+                        username: tgUser.username || tgUser.first_name || 'Игрок',
+                        first_name: tgUser.first_name,
+                        last_name: tgUser.last_name,
+                        photo_url: tgUser.photo_url
+                    }));
+                }
+            } catch (e) {
+                console.error('[main.js] Ошибка при авторизации через Telegram:', e);
                 const profileName = document.getElementById('profile-name');
                 const profileId = document.getElementById('profile-id');
                 if (profileName) profileName.textContent = tgUser.username || tgUser.first_name || 'Игрок';
@@ -80,52 +77,53 @@ window.addEventListener('DOMContentLoaded', async function() {
                     photo_url: tgUser.photo_url
                 }));
             }
-        } catch (e) {
-            console.error('[main.js] Ошибка при авторизации через Telegram:', e);
+        } else {
+            console.warn('[main.js] Нет данных Telegram WebApp или пользователь не авторизован');
             const profileName = document.getElementById('profile-name');
             const profileId = document.getElementById('profile-id');
-            if (profileName) profileName.textContent = tgUser.username || tgUser.first_name || 'Игрок';
-            if (profileId) profileId.textContent = 'ID: ' + tgUser.id;
-            localStorage.setItem('user', JSON.stringify({
-                id: tgUser.id,
-                username: tgUser.username || tgUser.first_name || 'Игрок',
-                first_name: tgUser.first_name,
-                last_name: tgUser.last_name,
-                photo_url: tgUser.photo_url
-            }));
+            if (profileName) profileName.textContent = 'Гость';
+            if (profileId) profileId.textContent = '';
+            localStorage.removeItem('user');
+            alert('Вход возможен только через Telegram WebApp!');
         }
-    } else {
-        console.warn('[main.js] Нет данных Telegram WebApp или пользователь не авторизован');
+    } catch (error) {
+        console.error('[main.js] Ошибка проверки авторизации:', error);
         const profileName = document.getElementById('profile-name');
         const profileId = document.getElementById('profile-id');
         if (profileName) profileName.textContent = 'Гость';
         if (profileId) profileId.textContent = '';
         localStorage.removeItem('user');
-        alert('Вход возможен только через Telegram WebApp!');
+    } finally {
+        document.body.removeChild(loader);
     }
 });
 
-// Обработчик кнопки "Начать игру"
-document.getElementById('start-game').addEventListener('click', function() {
+// Обработчики кнопок
+document.getElementById('start-game')?.addEventListener('click', function() {
     var user = localStorage.getItem('user');
     if (!user) {
-        // window.location.href = '/register.html'; // Удалено
+        alert('Необходимо войти через Telegram для начала игры!');
         return;
     }
     localStorage.setItem('gameSettings', JSON.stringify({ playerCount: 4, withAI: false }));
     window.location.href = '/game-setup';
 });
 
-document.getElementById('play-ai').addEventListener('click', function() {
+document.getElementById('play-ai')?.addEventListener('click', function() {
+    var user = localStorage.getItem('user');
+    if (!user) {
+        alert('Необходимо войти через Telegram для начала игры!');
+        return;
+    }
     localStorage.setItem('gameSettings', JSON.stringify({ playerCount: 4, withAI: true }));
     window.location.href = '/game-setup';
 });
 
-document.getElementById('shop').addEventListener('click', function() {
+document.getElementById('shop')?.addEventListener('click', function() {
     window.location.href = '/shop.html';
 });
 
-document.getElementById('profile-page-btn').addEventListener('click', function() {
+document.getElementById('profile-page-btn')?.addEventListener('click', function() {
     window.location.href = '/profile.html';
 });
 
@@ -298,4 +296,39 @@ window.showFriendsModal = async function() {
 
   modalBg.appendChild(box);
   document.body.appendChild(modalBg);
+}
+
+// Обработчики нижнего меню
+document.getElementById('menu-home')?.addEventListener('click', function(e) {
+    e.preventDefault();
+    setActiveMenuItem(this);
+    // Уже на главной странице
+});
+
+document.getElementById('menu-friends')?.addEventListener('click', function(e) {
+    e.preventDefault();
+    setActiveMenuItem(this);
+    // TODO: Реализовать страницу друзей
+    alert('Страница друзей в разработке');
+});
+
+document.getElementById('menu-profile')?.addEventListener('click', function(e) {
+    e.preventDefault();
+    setActiveMenuItem(this);
+    window.location.href = '/profile.html';
+});
+
+document.getElementById('menu-rules')?.addEventListener('click', function(e) {
+    e.preventDefault();
+    setActiveMenuItem(this);
+    // TODO: Реализовать страницу правил
+    alert('Страница правил в разработке');
+});
+
+// Вспомогательная функция для установки активного пункта меню
+function setActiveMenuItem(element) {
+    document.querySelectorAll('.bottom-menu-item').forEach(item => {
+        item.classList.remove('active');
+    });
+    element.classList.add('active');
 } 
