@@ -49,7 +49,6 @@
                             window.location.replace('/index.html');
                         } else if (data.username) {
                             waitText.innerHTML = `Пользователь <b>@${data.username}</b> не зарегистрирован.<br>Пожалуйста, войдите через Telegram.`;
-                            setTimeout(() => window.location.href = '/register.html', 2500);
                         } else if (data.telegramAvailable) {
                             waitText.innerHTML = `Пользователь Telegram не найден в базе.<br><button id='tgCreateBtn' style='margin-top:18px;padding:12px 24px;font-size:1.1em;background:#2196f3;color:#fff;border:none;border-radius:8px;cursor:pointer;'>Войти с этого Telegram</button>`;
                             tgLoginBtn = document.getElementById('tgCreateBtn');
@@ -64,17 +63,14 @@
                                     window.location.replace('/index.html');
                                 } else {
                                     waitText.textContent = 'Ошибка авторизации через Telegram!';
-                                    setTimeout(() => window.location.href = '/register.html', 2000);
                                 }
                             };
                         } else {
                             waitText.textContent = 'Ошибка авторизации через Telegram!';
-                            setTimeout(() => window.location.href = '/register.html', 2000);
                         }
                     })
                     .catch(() => {
                         waitText.textContent = 'Ошибка соединения!';
-                        setTimeout(() => window.location.href = '/register.html', 2000);
                     });
             } else {
                 setTimeout(updateProgress, 400);
