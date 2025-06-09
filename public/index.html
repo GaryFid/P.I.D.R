@@ -165,74 +165,46 @@
     <div class="container">
         <header>
             <div class="header-top">
-                <div class="header-cards" id="header-cards"></div>
                 <div class="header-actions">
+                    <div class="menu-friends-button">
+                        <div class="menu-icon">
+                            <i class="fas fa-bars"></i>
+                        </div>
+                    </div>
                     <div class="wallet-block" id="wallet-block">
                         <button class="wallet-btn" id="wallet-btn">
                             <img src="img/ton-icon.svg" alt="TON" class="crypto-icon">
                             <span class="wallet-balance">0.00</span>
                         </button>
-                        <div class="wallet-dropdown" id="wallet-dropdown">
-                            <div class="wallet-coin">
-                                <img src="img/ton-icon.svg" class="coin-icon" alt="Toncoin">
-                                <span class="coin-name">Toncoin</span>
-                                <span class="coin-balance">0.00</span>
-                            </div>
-                            <div class="wallet-coin">
-                                <img src="img/jetton-icon.svg" class="coin-icon" alt="JetTon">
-                                <span class="coin-name">JetTon</span>
-                                <span class="coin-balance">0.00</span>
-                            </div>
-                            <div class="wallet-coin">
-                                <img src="img/solana-icon.svg" class="coin-icon" alt="Solana">
-                                <span class="coin-name">Solana</span>
-                                <span class="coin-balance">0.00</span>
-                            </div>
-                            <div class="wallet-coin">
-                                <img src="img/trump-icon.svg" class="coin-icon" alt="TRUMP">
-                                <span class="coin-name">TRUMP</span>
-                                <span class="coin-balance">0.00</span>
-                            </div>
-                        </div>
                     </div>
-                    <button class="friends-btn" id="friends-btn" title="Друзья" onclick="showFriendsModal()">
-                        <span class="friends-icon">👥</span>
-                        <span class="friends-text">Друзья</span>
-                    </button>
-                    <div class="profile-block" id="profile-block" style="position:relative;">
+                    <div class="profile-block" id="profile-block">
                         <img src="img/player-avatar.svg" alt="Профиль" class="profile-avatar">
                         <span class="profile-name" id="profile-name">Гость</span>
-                        <span class="profile-id" id="profile-id" style="font-size:0.9em;color:#888;"></span>
+                        <span class="profile-id" id="profile-id"></span>
                     </div>
                 </div>
             </div>
-            <h1>P.I.D.R. - Punishment Inevitable: Dumb Rules</h1>
-            <p>P.I.D.R. - Punishment Inevitable: Dumb Rules</p>
+            <h1 style="text-align:center;margin:18px 0 0 0;font-size:1.5em;color:var(--emerald-dark);font-weight:900;letter-spacing:1px;">P.I.D.R. — Dumb Rules</h1>
+            <p style="text-align:center;color:var(--gold-dark);margin:0 0 8px 0;font-size:1.08em;">Punishment Inevitable: Dumb Rules</p>
         </header>
-        
         <main>
-            <div class="main-card-loader" id="main-card-loader"></div>
             <div class="card-menu">
                 <div class="menu-item" id="start-game">
                     <div class="menu-icon">🎮</div>
                     <div class="menu-text">Начать игру</div>
                 </div>
-                
                 <div class="menu-item" id="play-ai">
                     <div class="menu-icon">🤖</div>
                     <div class="menu-text">Играть с ИИ</div>
                 </div>
-                
                 <div class="menu-item" id="rating">
                     <div class="menu-icon">🏆</div>
                     <div class="menu-text">Рейтинг</div>
                 </div>
-                
                 <div class="menu-item menu-item-shop" id="shop">
                     <div class="menu-icon">🛒</div>
                     <div class="menu-text">Магазин</div>
                 </div>
-                
                 <div class="menu-item" id="rules">
                     <div class="menu-icon">📋</div>
                     <div class="menu-text">Правила</div>
@@ -243,7 +215,6 @@
                 </div>
             </div>
         </main>
-        
         <footer>
             <p>© 2025 P.I.D.R. - Punishment Inevitable: Dumb Rules</p>
         </footer>
