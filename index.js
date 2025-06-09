@@ -190,9 +190,18 @@ async function startApp() {
     app.get('/', (req, res) => {
       res.sendFile(path.join(__dirname, 'public', 'index.html'));
     });
-
     app.get('/webapp', (req, res) => {
       res.sendFile(path.join(__dirname, 'public', 'index.html'));
+    });
+
+    // SPA fallback — для всех остальных путей, кроме API и статики
+    app.get('*', (req, res) => {
+      // Не отдаём index.html для API и статики
+      if (req.path.startsWith('/api') || req.path.startsWith('/auth') || req.path.startsWith('/js') || req.path.startsWith('/css') || req.path.startsWith('/img') || req.path.startsWith('/uploads')) {
+        res.status(404).send('Not found');
+      } else {
+        res.sendFile(path.join(__dirname, 'public', 'index.html'));
+      }
     });
 
     app.get('/register', (req, res) => {
@@ -260,4 +269,5 @@ async function startApp() {
 }
 
 // Запускаем приложение
+startApp(); 
 startApp(); 
