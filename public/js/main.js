@@ -40,8 +40,10 @@ window.addEventListener('DOMContentLoaded', async function() {
         // window.location.replace('/register.html'); // Удалено
     }
 
+    console.log('[main.js] Старт авторизации через Telegram WebApp');
     if (window.Telegram && window.Telegram.WebApp && Telegram.WebApp.initDataUnsafe && Telegram.WebApp.initDataUnsafe.user) {
         const tgUser = Telegram.WebApp.initDataUnsafe.user;
+        console.log('[main.js] Данные Telegram:', tgUser);
         try {
             const resp = await fetch('/api/telegram-auth', {
                 method: 'POST',
@@ -54,14 +56,18 @@ window.addEventListener('DOMContentLoaded', async function() {
                     photo_url: tgUser.photo_url
                 })
             });
+            console.log('[main.js] Ответ от /api/telegram-auth:', resp);
             const data = await resp.json();
+            console.log('[main.js] JSON от /api/telegram-auth:', data);
             if (data.success && data.user) {
                 localStorage.setItem('user', JSON.stringify(data.user));
                 const profileName = document.getElementById('profile-name');
                 const profileId = document.getElementById('profile-id');
                 if (profileName) profileName.textContent = data.user.username || 'Игрок';
                 if (profileId) profileId.textContent = 'ID: ' + (data.user.id || tgUser.id);
+                console.log('[main.js] Пользователь авторизован, переход к меню');
             } else {
+                console.warn('[main.js] Не удалось авторизовать пользователя через Telegram:', data);
                 const profileName = document.getElementById('profile-name');
                 const profileId = document.getElementById('profile-id');
                 if (profileName) profileName.textContent = tgUser.username || tgUser.first_name || 'Игрок';
@@ -75,6 +81,7 @@ window.addEventListener('DOMContentLoaded', async function() {
                 }));
             }
         } catch (e) {
+            console.error('[main.js] Ошибка при авторизации через Telegram:', e);
             const profileName = document.getElementById('profile-name');
             const profileId = document.getElementById('profile-id');
             if (profileName) profileName.textContent = tgUser.username || tgUser.first_name || 'Игрок';
@@ -88,12 +95,12 @@ window.addEventListener('DOMContentLoaded', async function() {
             }));
         }
     } else {
+        console.warn('[main.js] Нет данных Telegram WebApp или пользователь не авторизован');
         const profileName = document.getElementById('profile-name');
         const profileId = document.getElementById('profile-id');
         if (profileName) profileName.textContent = 'Гость';
         if (profileId) profileId.textContent = '';
         localStorage.removeItem('user');
-        // Можно добавить alert или красивое сообщение на страницу
         alert('Вход возможен только через Telegram WebApp!');
     }
 });

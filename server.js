@@ -34,55 +34,6 @@ if (config.telegram.enabled && config.telegram.token) {
 }
 
 // Маршруты
-app.post('/auth/login', async (req, res) => {
-    try {
-        const { username, password } = req.body;
-        
-        const user = await User.findOne({
-            where: { username }
-        });
-
-        if (!user) {
-            return res.json({ success: false, message: 'Пользователь не найден' });
-        }
-
-        const match = await user.validatePassword(password);
-
-        if (!match) {
-            return res.json({ success: false, message: 'Неверный пароль' });
-        }
-
-        req.session.userId = user.id;
-        res.json({ success: true, user: user.toPublicJSON() });
-    } catch (error) {
-        console.error('Ошибка при входе:', error);
-        res.json({ success: false, message: 'Ошибка сервера' });
-    }
-});
-
-app.post('/auth/register', async (req, res) => {
-    try {
-        const { username, password } = req.body;
-        const existingUser = await User.findOne({ where: { username } });
-        if (existingUser) {
-            return res.json({ success: false, message: 'Пользователь уже существует' });
-        }
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password, salt);
-        const user = await User.create({
-            username,
-            password: hashedPassword,
-            authType: 'local',
-            registrationDate: new Date()
-        });
-        req.session.userId = user.id;
-        res.json({ success: true, user: user.toPublicJSON() });
-    } catch (error) {
-        console.error('Ошибка при регистрации:', error);
-        res.json({ success: false, message: 'Ошибка сервера' });
-    }
-});
-
 app.get('/auth/telegram', (req, res) => {
     if (!config.telegram.enabled || !config.telegram.username) {
         return res.status(500).json({ success: false, message: 'Вход через Telegram временно недоступен' });

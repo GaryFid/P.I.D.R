@@ -167,7 +167,8 @@
       profileAvatar.src = user.avatar || '/img/avatar-default.png';
       // Формируем реферальную ссылку
       const refCode = user.referralCode || '';
-      const refLink = window.location.origin + '/register?ref=' + refCode;
+      // const refLink = window.location.origin + '/register?ref=' + refCode;
+      const refLink = window.location.origin + '/?ref=' + refCode;
       refLinkBox.textContent = refLink;
       copyRefBtn.onclick = () => {
         navigator.clipboard.writeText(refLink);
