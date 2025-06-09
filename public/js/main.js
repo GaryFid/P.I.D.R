@@ -57,11 +57,15 @@ window.addEventListener('DOMContentLoaded', async function() {
             const data = await resp.json();
             if (data.success && data.user) {
                 localStorage.setItem('user', JSON.stringify(data.user));
-                document.getElementById('profile-name').textContent = data.user.username || 'Игрок';
-                document.getElementById('profile-id').textContent = 'ID: ' + (data.user.id || tgUser.id);
+                const profileName = document.getElementById('profile-name');
+                const profileId = document.getElementById('profile-id');
+                if (profileName) profileName.textContent = data.user.username || 'Игрок';
+                if (profileId) profileId.textContent = 'ID: ' + (data.user.id || tgUser.id);
             } else {
-                document.getElementById('profile-name').textContent = tgUser.username || tgUser.first_name || 'Игрок';
-                document.getElementById('profile-id').textContent = 'ID: ' + tgUser.id;
+                const profileName = document.getElementById('profile-name');
+                const profileId = document.getElementById('profile-id');
+                if (profileName) profileName.textContent = tgUser.username || tgUser.first_name || 'Игрок';
+                if (profileId) profileId.textContent = 'ID: ' + tgUser.id;
                 localStorage.setItem('user', JSON.stringify({
                     id: tgUser.id,
                     username: tgUser.username || tgUser.first_name || 'Игрок',
@@ -71,8 +75,10 @@ window.addEventListener('DOMContentLoaded', async function() {
                 }));
             }
         } catch (e) {
-            document.getElementById('profile-name').textContent = tgUser.username || tgUser.first_name || 'Игрок';
-            document.getElementById('profile-id').textContent = 'ID: ' + tgUser.id;
+            const profileName = document.getElementById('profile-name');
+            const profileId = document.getElementById('profile-id');
+            if (profileName) profileName.textContent = tgUser.username || tgUser.first_name || 'Игрок';
+            if (profileId) profileId.textContent = 'ID: ' + tgUser.id;
             localStorage.setItem('user', JSON.stringify({
                 id: tgUser.id,
                 username: tgUser.username || tgUser.first_name || 'Игрок',
@@ -82,9 +88,13 @@ window.addEventListener('DOMContentLoaded', async function() {
             }));
         }
     } else {
-        document.getElementById('profile-name').textContent = 'Гость';
-        document.getElementById('profile-id').textContent = '';
+        const profileName = document.getElementById('profile-name');
+        const profileId = document.getElementById('profile-id');
+        if (profileName) profileName.textContent = 'Гость';
+        if (profileId) profileId.textContent = '';
         localStorage.removeItem('user');
+        // Можно добавить alert или красивое сообщение на страницу
+        alert('Вход возможен только через Telegram WebApp!');
     }
 });
 
