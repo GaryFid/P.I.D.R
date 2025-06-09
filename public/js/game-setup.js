@@ -1,5 +1,173 @@
 // --- game-setup.js без import/export ---
 
+// Инициализация Telegram WebApp
+const tg = window.Telegram.WebApp;
+tg.expand();
+
+// Состояние настроек
+let gameSettings = {
+    playerCount: 2,
+    timeLimit: 0, // 0 = без ограничения
+    aiOpponents: 0,
+    customRules: []
+};
+
+// Инициализация страницы
+function initSetup() {
+    // Инициализация слайдера количества игроков
+    const playerCountSlider = document.querySelector('#player-count');
+    const playerCountValue = document.querySelector('#player-count-value');
+    
+    playerCountSlider.addEventListener('input', (e) => {
+        const value = parseInt(e.target.value);
+        gameSettings.playerCount = value;
+        playerCountValue.textContent = value;
+        updateAIOptions(value);
+    });
+    
+    // Инициализация переключателя времени
+    document.querySelectorAll('input[name="time-limit"]').forEach(radio => {
+        radio.addEventListener('change', (e) => {
+            gameSettings.timeLimit = parseInt(e.target.value);
+        });
+    });
+    
+    // Инициализация слайдера ИИ противников
+    const aiSlider = document.querySelector('#ai-opponents');
+    const aiValue = document.querySelector('#ai-value');
+    
+    aiSlider.addEventListener('input', (e) => {
+        const value = parseInt(e.target.value);
+        gameSettings.aiOpponents = value;
+        aiValue.textContent = value;
+    });
+    
+    // Инициализация чекбоксов правил
+    document.querySelectorAll('.rule-checkbox').forEach(checkbox => {
+        checkbox.addEventListener('change', (e) => {
+            const ruleId = e.target.dataset.ruleId;
+            if (e.target.checked) {
+                gameSettings.customRules.push(ruleId);
+            } else {
+                const index = gameSettings.customRules.indexOf(ruleId);
+                if (index > -1) {
+                    gameSettings.customRules.splice(index, 1);
+                }
+            }
+        });
+    });
+}
+
+// Обновление опций ИИ в зависимости от количества игроков
+function updateAIOptions(playerCount) {
+    const aiSlider = document.querySelector('#ai-opponents');
+    const maxAI = Math.max(0, playerCount - 1); // Минимум 1 реальный игрок
+    
+    aiSlider.max = maxAI;
+    if (gameSettings.aiOpponents > maxAI) {
+        aiSlider.value = maxAI;
+        gameSettings.aiOpponents = maxAI;
+        document.querySelector('#ai-value').textContent = maxAI;
+    }
+    
+    // Отключаем слайдер, если нельзя добавить ИИ
+    aiSlider.disabled = maxAI === 0;
+}
+
+// Создание игры
+async function createGame() {
+    try {
+        const response = await fetch('/api/game/create', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include',
+            body: JSON.stringify(gameSettings)
+        });
+        const data = await response.json();
+        
+        if (data.success) {
+            // Показываем окно с кодом игры
+            showGameCode(data.gameCode);
+        } else {
+            showError(data.error || 'Ошибка при создании игры');
+        }
+    } catch (error) {
+        console.error('Ошибка при создании игры:', error);
+        showError('Произошла ошибка при создании игры');
+    }
+}
+
+// Показ кода игры
+function showGameCode(code) {
+    const modal = document.createElement('div');
+    modal.className = 'modal';
+    modal.innerHTML = `
+        <div class="modal-content">
+            <h3>Игра создана!</h3>
+            <p>Поделитесь этим кодом с друзьями:</p>
+            <div class="game-code">${code}</div>
+            <button class="copy-code">Скопировать код</button>
+            <button class="start-game">Начать игру</button>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // Копирование кода
+    modal.querySelector('.copy-code').addEventListener('click', () => {
+        navigator.clipboard.writeText(code).then(() => {
+            showNotification('Код скопирован!', 'success');
+        });
+    });
+    
+    // Начало игры
+    modal.querySelector('.start-game').addEventListener('click', () => {
+        window.location.href = `/game.html?code=${code}`;
+    });
+}
+
+// Показ ошибки
+function showError(message) {
+    const notification = document.createElement('div');
+    notification.className = 'notification error';
+    notification.textContent = message;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.classList.add('fade-out');
+        setTimeout(() => {
+            document.body.removeChild(notification);
+        }, 300);
+    }, 3000);
+}
+
+// Показ уведомления
+function showNotification(message, type = 'info') {
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.textContent = message;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.classList.add('fade-out');
+        setTimeout(() => {
+            document.body.removeChild(notification);
+        }, 300);
+    }, 3000);
+}
+
+// Инициализация при загрузке страницы
+document.addEventListener('DOMContentLoaded', () => {
+    initSetup();
+    
+    // Обработчик кнопки создания игры
+    document.querySelector('.create-game').addEventListener('click', createGame);
+});
+
 document.addEventListener('DOMContentLoaded', function() {
     var tgApp = window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp : null;
     if (tgApp) tgApp.expand();
@@ -151,9 +319,9 @@ startGameBtn.addEventListener('click', function() {
         localStorage.setItem('gameSettings', JSON.stringify(gameSettings));
         console.log(`Сохранены настройки игры: ${JSON.stringify(gameSettings)}`);
         // Если используем Telegram WebApp, отправляем данные в бота
-        if (tgApp && tgApp.isExpanded) {
+        if (tg && tg.isExpanded) {
             const userData = JSON.parse(user);
-            tgApp.sendData(JSON.stringify({
+            tg.sendData(JSON.stringify({
                 action: 'start_game',
                 userId: userData.id,
                 playerCount: selectedPlayerCount,

@@ -4,257 +4,368 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>P.I.D.R. Game</title>
-    <link rel="stylesheet" href="css/telegram.css">
+    <link rel="stylesheet" href="css/style.css">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-    .profile-dropdown {
-      display: none;
-      position: absolute;
-      right: 0;
-      top: 56px;
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 4px 16px #1e3c72aa;
-      min-width: 180px;
-      z-index: 1200;
-      padding: 8px 0;
-      font-size: 1.08em;
-      animation: fadeIn 0.3s;
-    }
-    .profile-dropdown.active {
-      display: block;
-    }
-    .profile-dropdown-btn {
-      width: 100%;
-      background: none;
-      border: none;
-      text-align: left;
-      padding: 12px 24px;
-      color: #1e3c72;
-      font-weight: 600;
-      font-size: 1em;
-      cursor: pointer;
-      transition: background 0.15s;
-    }
-    .profile-dropdown-btn:hover {
-      background: #e3eafc;
-      color: #2196f3;
-    }
-    .profile-modal-bg {
-      display: none;
-      position: fixed;
-      left: 0; top: 0; width: 100vw; height: 100vh;
-      background: rgba(30,60,114,0.18);
-      z-index: 3000;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.3s;
-    }
-    .profile-modal-bg.active {
-      display: flex;
-      animation: fadeInBg 0.4s;
-    }
-    @keyframes fadeInBg {
-      from { background: rgba(30,60,114,0.01); }
-      to { background: rgba(30,60,114,0.18); }
-    }
-    .profile-modal-box {
-      background: #fff;
-      border-radius: 18px;
-      padding: 40px 32px 32px 32px;
-      max-width: 400px;
-      width: 95vw;
-      box-shadow: 0 12px 48px #1e3c72cc, 0 2px 8px #2196f355;
-      position: relative;
-      text-align: center;
-      animation: modalPopIn 0.45s cubic-bezier(.4,0,.2,1);
-      overflow: visible;
-    }
-    @keyframes modalPopIn {
-      from { opacity: 0; transform: scale(0.85) translateY(40px); }
-      to { opacity: 1; transform: scale(1) translateY(0); }
-    }
-    .profile-modal-cards {
-      position: absolute;
-      left: -36px; top: 18px;
-      z-index: 1;
-      pointer-events: none;
-      opacity: 0.18;
-    }
-    .profile-modal-cards img {
-      width: 48px; margin: 0 2px; border-radius: 8px; box-shadow: 0 2px 8px #2196f355;
-      transform: rotate(-12deg);
-    }
-    .profile-modal-cards img:nth-child(2) { transform: rotate(8deg); }
-    .profile-modal-cards img:nth-child(3) { transform: rotate(-4deg); }
-    .profile-modal-cards img:nth-child(4) { transform: rotate(16deg); }
-    .profile-modal-cards img:nth-child(5) { transform: rotate(-18deg); }
-    .profile-modal-close {
-      position: absolute;
-      right: 18px;
-      top: 12px;
-      font-size: 2em;
-      background: none;
-      border: none;
-      cursor: pointer;
-      color: #2196f3;
-      z-index: 10;
-      transition: color 0.2s;
-    }
-    .profile-modal-close:hover {
-      color: #e53935;
-    }
-    /* Стили для кнопки меню и друзей */
-    .menu-friends-button {
-        position: fixed;
-        top: 20px;
-        left: 20px;
-        z-index: 1000;
-        cursor: pointer;
-    }
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: #fff;
+            min-height: 100vh;
+        }
 
-    .menu-icon {
-        width: 40px;
-        height: 40px;
-        background: #ffffff;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-        transition: all 0.3s ease;
-    }
+        .main-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
 
-    .menu-icon:hover {
-        background: #f0f0f0;
-        transform: scale(1.05);
-    }
+        .header {
+            background: linear-gradient(135deg, #1a4a7a 0%, #3390ec 100%);
+            border-radius: 15px;
+            padding: 20px;
+            color: white;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-    .menu-icon i {
-        font-size: 20px;
-        color: #333;
-    }
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
 
-    /* Стили для модального окна меню и друзей */
-    #menu-friends-modal .modal-content {
-        max-width: 500px;
-        width: 90%;
-    }
+        .avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
 
-    .modal-body {
-        padding: 20px;
-    }
+        .user-details {
+            display: flex;
+            flex-direction: column;
+        }
 
-    .menu-section {
-        margin-bottom: 30px;
-    }
+        .username {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
 
-    .friends-section {
-        border-top: 1px solid #eee;
-        padding-top: 20px;
-    }
+        .user-id {
+            font-size: 14px;
+            opacity: 0.8;
+        }
 
-    .friends-section h3 {
-        margin-bottom: 15px;
-        color: #333;
-    }
+        .balance {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .main-actions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .action-btn {
+            background: white;
+            border: none;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 12px rgba(26, 74, 122, 0.2);
+        }
+
+        .action-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .action-text {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1a4a7a;
+        }
+
+        .quick-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1a4a7a;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .recent-games {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a4a7a;
+            margin-bottom: 15px;
+        }
+
+        .games-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .game-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #e3eafc;
+        }
+
+        .game-item:last-child {
+            border-bottom: none;
+        }
+
+        .game-result {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .win {
+            background: #e3fcef;
+            color: #0f9d58;
+        }
+
+        .lose {
+            background: #fce3e3;
+            color: #d93025;
+        }
+
+        .game-info {
+            flex: 1;
+        }
+
+        .game-date {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .game-score {
+            font-weight: 500;
+            color: #1a4a7a;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #666;
+            font-size: 12px;
+        }
+
+        .nav-item.active {
+            color: #1a4a7a;
+        }
+
+        .nav-icon {
+            font-size: 24px;
+            margin-bottom: 4px;
+        }
+
+        @media (max-width: 480px) {
+            .main-actions {
+                grid-template-columns: 1fr;
+            }
+
+            .quick-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="app-container">
-        <!-- Профиль -->
-        <div class="profile-section animate-fade-in">
-            <img id="profile-avatar" class="profile-avatar" src="img/avatar-default.png" alt="Аватар">
-            <div class="profile-info">
-                <h2 id="profile-name" class="profile-name">Загрузка...</h2>
-                <p id="profile-id" class="profile-id"></p>
+    <div class="main-container">
+        <div class="header">
+            <div class="user-info">
+                <div class="avatar">👤</div>
+                <div class="user-details">
+                    <div class="username">Игрок</div>
+                    <div class="user-id">ID: 12345678</div>
+                </div>
+            </div>
+            <div class="balance">
+                <span>💰</span>
+                <span>1000</span>
             </div>
         </div>
 
-        <!-- Основное меню -->
-        <div class="menu-container">
-            <div class="menu-item animate-fade-in" id="start-game">
-                <div class="menu-icon">🎮</div>
-                <div class="menu-text">Начать игру</div>
+        <div class="main-actions">
+            <button class="action-btn" onclick="window.location.href='game-setup.html'">
+                <div class="action-icon">🎮</div>
+                <div class="action-text">Играть</div>
+            </button>
+            <button class="action-btn" onclick="window.location.href='shop.html'">
+                <div class="action-icon">🛍️</div>
+                <div class="action-text">Магазин</div>
+            </button>
+        </div>
+
+        <div class="quick-stats">
+            <div class="stat-card">
+                <div class="stat-value">42</div>
+                <div class="stat-label">Игр сыграно</div>
             </div>
-            
-            <div class="menu-item animate-fade-in" id="play-ai">
-                <div class="menu-icon">🤖</div>
-                <div class="menu-text">Играть с ИИ</div>
+            <div class="stat-card">
+                <div class="stat-value">65%</div>
+                <div class="stat-label">Побед</div>
             </div>
-            
-            <div class="menu-item animate-fade-in" id="rating">
-                <div class="menu-icon">🏆</div>
-                <div class="menu-text">Рейтинг</div>
+            <div class="stat-card">
+                <div class="stat-value">1234</div>
+                <div class="stat-label">Рейтинг</div>
             </div>
-            
-            <div class="menu-item animate-fade-in" id="shop">
-                <div class="menu-icon">🛒</div>
-                <div class="menu-text">Магазин</div>
-            </div>
-            
-            <div class="menu-item animate-fade-in" id="rules">
-                <div class="menu-icon">📋</div>
-                <div class="menu-text">Правила</div>
-            </div>
-            
-            <div class="menu-item animate-fade-in" id="profile-page-btn">
-                <div class="menu-icon">👤</div>
-                <div class="menu-text">Профиль</div>
-            </div>
+        </div>
+
+        <div class="recent-games">
+            <div class="section-title">Недавние игры</div>
+            <ul class="games-list">
+                <li class="game-item">
+                    <div class="game-result win">W</div>
+                    <div class="game-info">
+                        <div class="game-date">Сегодня, 15:30</div>
+                        <div class="game-score">Победа • +25 очков</div>
+                    </div>
+                </li>
+                <li class="game-item">
+                    <div class="game-result lose">L</div>
+                    <div class="game-info">
+                        <div class="game-date">Сегодня, 14:15</div>
+                        <div class="game-score">Поражение • -15 очков</div>
+                    </div>
+                </li>
+                <li class="game-item">
+                    <div class="game-result win">W</div>
+                    <div class="game-info">
+                        <div class="game-date">Вчера, 20:45</div>
+                        <div class="game-score">Победа • +30 очков</div>
+                    </div>
+                </li>
+            </ul>
         </div>
     </div>
 
-    <!-- Нижнее меню -->
-    <div class="bottom-menu">
-        <a href="#" class="bottom-menu-item active" id="menu-home">
-            <div class="bottom-menu-icon">🏠</div>
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item active">
+            <div class="nav-icon">🎮</div>
             <span>Меню</span>
         </a>
-        <a href="#" class="bottom-menu-item" id="menu-friends">
-            <div class="bottom-menu-icon">👥</div>
+        <a href="#" class="nav-item">
+            <div class="nav-icon">👥</div>
             <span>Друзья</span>
         </a>
-        <a href="#" class="bottom-menu-item" id="menu-profile">
-            <div class="bottom-menu-icon">👤</div>
+        <a href="profile.html" class="nav-item">
+            <div class="nav-icon">👤</div>
             <span>Профиль</span>
         </a>
-        <a href="#" class="bottom-menu-item" id="menu-rules">
-            <div class="bottom-menu-icon">📋</div>
+        <a href="#" class="nav-item">
+            <div class="nav-icon">💰</div>
+            <span>Кошелек</span>
+        </a>
+        <a href="#" class="nav-item">
+            <div class="nav-icon">📋</div>
             <span>Правила</span>
         </a>
-    </div>
+    </nav>
 
     <script src="js/main.js"></script>
     <script>
     // --- Удалить checkAuth и logout ---
     // --- Добавить инициализацию из Telegram WebApp ---
     window.addEventListener('DOMContentLoaded', function() {
-      if (window.Telegram && window.Telegram.WebApp && Telegram.WebApp.initDataUnsafe && Telegram.WebApp.initDataUnsafe.user) {
-        const tgUser = Telegram.WebApp.initDataUnsafe.user;
-        document.getElementById('profile-name').textContent = tgUser.username || tgUser.first_name || 'Игрок';
-        document.getElementById('profile-id').textContent = 'ID: ' + tgUser.id;
-        localStorage.setItem('user', JSON.stringify({
-          id: tgUser.id,
-          username: tgUser.username || tgUser.first_name || 'Игрок',
-          first_name: tgUser.first_name,
-          last_name: tgUser.last_name,
-          photo_url: tgUser.photo_url
-        }));
-      } else {
-        document.getElementById('profile-name').textContent = 'Гость';
-        document.getElementById('profile-id').textContent = '';
-        localStorage.removeItem('user');
-      }
+        if (window.Telegram && window.Telegram.WebApp && Telegram.WebApp.initDataUnsafe && Telegram.WebApp.initDataUnsafe.user) {
+            const tgUser = Telegram.WebApp.initDataUnsafe.user;
+            document.getElementById('userName').textContent = tgUser.username || tgUser.first_name || 'Игрок';
+            document.getElementById('userId').textContent = 'ID: ' + tgUser.id;
+            localStorage.setItem('user', JSON.stringify({
+                id: tgUser.id,
+                username: tgUser.username || tgUser.first_name || 'Игрок',
+                first_name: tgUser.first_name,
+                last_name: tgUser.last_name,
+                photo_url: tgUser.photo_url
+            }));
+        } else {
+            document.getElementById('userName').textContent = 'Гость';
+            document.getElementById('userId').textContent = '';
+            localStorage.removeItem('user');
+        }
     });
 
     document.getElementById('shop').onclick = () => {
         window.location.href = 'shop.html';
     };
-    document.getElementById('start-game').onclick = () => {
+    document.getElementById('startGame').onclick = () => {
         window.location.href = 'game.html';
     };
-    document.getElementById('profile-page-btn').onclick = () => {
+    document.getElementById('profile').onclick = () => {
         window.location.href = 'profile.html';
     };
     function showWelcomeMessage() {
@@ -304,12 +415,12 @@
     }
     // Проверка авторизации (welcome только если нет user.id)
     try {
-      const user = JSON.parse(localStorage.getItem('user') || '{}');
-      if (!user || !user.id) {
-        showWelcomeMessage();
-      }
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        if (!user || !user.id) {
+            showWelcomeMessage();
+        }
     } catch {
-      showWelcomeMessage();
+        showWelcomeMessage();
     }
     </script>
 
@@ -333,7 +444,7 @@
                 </div>
                 <div class="friends-section">
                     <h3>Друзья</h3>
-            <div id="friendsListModal">
+                    <div id="friendsListModal">
                         <!-- Результаты поиска друзей будут добавлены динамически -->
                     </div>
                 </div>
@@ -370,64 +481,64 @@
     <script>
     // --- Модалка профиля ---
     window.showProfileModal = function() {
-      const user = JSON.parse(localStorage.getItem('user') || '{}');
-      safeShowModal(`
-        <div style="display:flex;flex-direction:column;align-items:center;">
-          <img src="${user.avatar || 'img/player-avatar.svg'}" alt="Аватар" style="width:80px;height:80px;border-radius:50%;box-shadow:0 2px 8px #2196f355;margin-bottom:12px;">
-          <div style="font-size:1.2em;font-weight:700;color:var(--tg-theme-text-color,#1e3c72);margin-bottom:6px;">${user.display_name || user.username || 'Гость'}</div>
-          <div style="color:#2196f3;font-size:1em;margin-bottom:8px;">@${user.telegram_username || ''}</div>
-          <div style="color:#444;font-size:1em;margin-bottom:8px;">Рейтинг: <b>${user.rating || 1000}</b></div>
-          <div style="color:#444;font-size:1em;margin-bottom:8px;">ID: <b>${user.id || '-'}</b></div>
-          <button class="game-btn" style="margin-top:10px;" onclick="logoutProfile()">Выйти</button>
-        </div>
-      `, {
-        title: 'Профиль',
-        onClose: () => {},
-      });
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        safeShowModal(`
+            <div style="display:flex;flex-direction:column;align-items:center;">
+                <img src="${user.avatar || 'img/player-avatar.svg'}" alt="Аватар" style="width:80px;height:80px;border-radius:50%;box-shadow:0 2px 8px #2196f355;margin-bottom:12px;">
+                <div style="font-size:1.2em;font-weight:700;color:var(--tg-theme-text-color,#1e3c72);margin-bottom:6px;">${user.display_name || user.username || 'Гость'}</div>
+                <div style="color:#2196f3;font-size:1em;margin-bottom:8px;">@${user.telegram_username || ''}</div>
+                <div style="color:#444;font-size:1em;margin-bottom:8px;">Рейтинг: <b>${user.rating || 1000}</b></div>
+                <div style="color:#444;font-size:1em;margin-bottom:8px;">ID: <b>${user.id || '-'}</b></div>
+                <button class="game-btn" style="margin-top:10px;" onclick="logoutProfile()">Выйти</button>
+            </div>
+        `, {
+            title: 'Профиль',
+            onClose: () => {},
+        });
     };
     window.logoutProfile = function() {
-      logout();
+        logout();
     };
 
     // --- Модалка правил ---
     window.showRulesModal = function() {
-      safeShowModal(`
-        <div class="rules-content" style="color:var(--tg-theme-text-color,#1e3c72);text-align:left;max-height:60vh;overflow-y:auto;">
-          <h3 style="color:#2196f3;">Правила игры "P.I.D.R. - Punishment Inevitable: Dumb Rules"</h3>
-          <h4>Цель игры</h4>
-          <p>Избавиться от всех карт на руке раньше других игроков.</p>
-          <h4>Колода и подготовка</h4>
-          <p>Игра ведется стандартной колодой из 52 карт (от 2 до туза).</p>
-          <p>Каждому игроку раздаются 3 карты: 2 закрытые и 1 открытая.</p>
-          <h4>Ход игры</h4>
-          <p><strong>Стадия 1:</strong> Выкладка карт</p>
-          <ul>
-            <li>Игроки ходят по очереди. Начинает игрок с самой старшей открытой картой.</li>
-            <li>В свой ход игрок может положить свою карту на открытую карту любого оппонента, если она на 1 ранг выше (например, 7 на 6).</li>
-            <li>Туз считается самым старшим, можно положить только 2 на туза.</li>
-            <li>После каждого хода игрок берёт новую карту из колоды и может продолжать ходить, пока у него есть возможность сделать ход.</li>
-            <li>Если игрок не может сделать ход картами из руки (положить на карты других игроков), он может положить карту на свою открытую карту по тем же правилам.</li>
-            <li>Если и это невозможно, игрок берёт карту из колоды и его ход завершается.</li>
-            <li>Стадия заканчивается, когда колода заканчивается.</li>
-          </ul>
-          <p><strong>Стадия 2:</strong> Сброс карт</p>
-          <ul>
-            <li>Все закрытые карты открываются.</li>
-            <li>Игроки по очереди скидывают карты в центр по правилу: одинаковый ранг или одинаковая масть.</li>
-            <li>Если игрок не может сходить, он берёт карту из колоды.</li>
-            <li>Если колода закончилась, сброс перемешивается и становится новой колодой.</li>
-          </ul>
-          <h4>Победа</h4>
-          <p>Побеждает игрок, который первым избавится от всех своих карт.</p>
-        </div>
-      `, {
-        title: 'Правила',
-        onClose: () => {},
-      });
+        safeShowModal(`
+            <div class="rules-content" style="color:var(--tg-theme-text-color,#1e3c72);text-align:left;max-height:60vh;overflow-y:auto;">
+                <h3 style="color:#2196f3;">Правила игры "P.I.D.R. - Punishment Inevitable: Dumb Rules"</h3>
+                <h4>Цель игры</h4>
+                <p>Избавиться от всех карт на руке раньше других игроков.</p>
+                <h4>Колода и подготовка</h4>
+                <p>Игра ведется стандартной колодой из 52 карт (от 2 до туза).</p>
+                <p>Каждому игроку раздаются 3 карты: 2 закрытые и 1 открытая.</p>
+                <h4>Ход игры</h4>
+                <p><strong>Стадия 1:</strong> Выкладка карт</p>
+                <ul>
+                    <li>Игроки ходят по очереди. Начинает игрок с самой старшей открытой картой.</li>
+                    <li>В свой ход игрок может положить свою карту на открытую карту любого оппонента, если она на 1 ранг выше (например, 7 на 6).</li>
+                    <li>Туз считается самым старшим, можно положить только 2 на туза.</li>
+                    <li>После каждого хода игрок берёт новую карту из колоды и может продолжать ходить, пока у него есть возможность сделать ход.</li>
+                    <li>Если игрок не может сделать ход картами из руки (положить на карты других игроков), он может положить карту на свою открытую карту по тем же правилам.</li>
+                    <li>Если и это невозможно, игрок берёт карту из колоды и его ход завершается.</li>
+                    <li>Стадия заканчивается, когда колода заканчивается.</li>
+                </ul>
+                <p><strong>Стадия 2:</strong> Сброс карт</p>
+                <ul>
+                    <li>Все закрытые карты открываются.</li>
+                    <li>Игроки по очереди скидывают карты в центр по правилу: одинаковый ранг или одинаковая масть.</li>
+                    <li>Если игрок не может сходить, он берёт карту из колоды.</li>
+                    <li>Если колода закончилась, сброс перемешивается и становится новой колодой.</li>
+                </ul>
+                <h4>Победа</h4>
+                <p>Побеждает игрок, который первым избавится от всех своих карт.</p>
+            </div>
+        `, {
+            title: 'Правила',
+            onClose: () => {},
+        });
     };
 
     // --- Навешиваем обработчики на кнопки ---
-    var profilePageBtn = document.getElementById('profile-page-btn');
+    var profilePageBtn = document.getElementById('profile');
     if (profilePageBtn) profilePageBtn.onclick = showProfileModal;
     var rulesBtn = document.getElementById('rules');
     if (rulesBtn) rulesBtn.onclick = showRulesModal;
@@ -438,22 +549,22 @@
     const closeModalBtn = menuFriendsModal ? menuFriendsModal.querySelector('.close-modal') : null;
 
     if (menuFriendsBtn && menuFriendsModal) {
-      menuFriendsBtn.addEventListener('click', () => {
-          menuFriendsModal.classList.add('active');
-          loadFriends(); // Загружаем список друзей при открытии модального окна
-      });
+        menuFriendsBtn.addEventListener('click', () => {
+            menuFriendsModal.classList.add('active');
+            loadFriends(); // Загружаем список друзей при открытии модального окна
+        });
     }
     if (closeModalBtn && menuFriendsModal) {
-      closeModalBtn.addEventListener('click', () => {
-          menuFriendsModal.classList.remove('active');
-      });
+        closeModalBtn.addEventListener('click', () => {
+            menuFriendsModal.classList.remove('active');
+        });
     }
     if (menuFriendsModal) {
-      menuFriendsModal.addEventListener('click', (e) => {
-          if (e.target === menuFriendsModal) {
-              menuFriendsModal.classList.remove('active');
-          }
-      });
+        menuFriendsModal.addEventListener('click', (e) => {
+            if (e.target === menuFriendsModal) {
+                menuFriendsModal.classList.remove('active');
+            }
+        });
     }
 
     // Функция загрузки списка друзей

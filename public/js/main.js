@@ -1,101 +1,102 @@
 // Инициализация Telegram WebApp
-var tgApp = window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp : null;
-if (tgApp) tgApp.expand();
+const tg = window.Telegram.WebApp;
+tg.expand();
 
 // Настройка основного цвета из Telegram
-if (tgApp && tgApp.themeParams) {
-    document.documentElement.style.setProperty('--tg-theme-bg-color', tgApp.themeParams.bg_color || '#ffffff');
-    document.documentElement.style.setProperty('--tg-theme-text-color', tgApp.themeParams.text_color || '#000000');
-    document.documentElement.style.setProperty('--tg-theme-button-color', tgApp.themeParams.button_color || '#3390ec');
-    document.documentElement.style.setProperty('--tg-theme-button-text-color', tgApp.themeParams.button_text_color || '#ffffff');
+if (tg && tg.themeParams) {
+    document.documentElement.style.setProperty('--tg-theme-bg-color', tg.themeParams.bg_color || '#ffffff');
+    document.documentElement.style.setProperty('--tg-theme-text-color', tg.themeParams.text_color || '#000000');
+    document.documentElement.style.setProperty('--tg-theme-button-color', tg.themeParams.button_color || '#3390ec');
+    document.documentElement.style.setProperty('--tg-theme-button-text-color', tg.themeParams.button_text_color || '#ffffff');
 }
 
-// Проверка авторизации при загрузке страницы
-window.addEventListener('DOMContentLoaded', async function() {
-    // Показываем лоадер
-    let loader = document.createElement('div');
-    loader.id = 'main-auth-loader';
-    loader.style = 'position:fixed;left:0;top:0;width:100vw;height:100vh;background:rgba(255,255,255,0.95);z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column;';
-    loader.innerHTML = '<div class="loader" style="border:6px solid #f3f3f3;border-top:6px solid #2196f3;border-radius:50%;width:48px;height:48px;animation:spin 1s linear infinite;"></div><div style="margin-top:18px;color:#2196f3;font-size:1.2em;">Проверка авторизации...</div>';
-    document.body.appendChild(loader);
-
+// Загрузка данных пользователя
+async function loadUserData() {
     try {
-        // Проверяем данные из Telegram WebApp
-        if (window.Telegram && window.Telegram.WebApp && Telegram.WebApp.initDataUnsafe && Telegram.WebApp.initDataUnsafe.user) {
-            const tgUser = Telegram.WebApp.initDataUnsafe.user;
-            console.log('[main.js] Данные Telegram:', tgUser);
-
-            try {
-                const resp = await fetch('/api/telegram-auth', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        id: tgUser.id,
-                        username: tgUser.username,
-                        first_name: tgUser.first_name,
-                        last_name: tgUser.last_name,
-                        photo_url: tgUser.photo_url
-                    })
-                });
-
-                console.log('[main.js] Ответ от /api/telegram-auth:', resp);
-                const data = await resp.json();
-                console.log('[main.js] JSON от /api/telegram-auth:', data);
-
-                if (data.success && data.user) {
-                    localStorage.setItem('user', JSON.stringify(data.user));
-                    const profileName = document.getElementById('profile-name');
-                    const profileId = document.getElementById('profile-id');
-                    if (profileName) profileName.textContent = data.user.username || 'Игрок';
-                    if (profileId) profileId.textContent = 'ID: ' + (data.user.id || tgUser.id);
-                    console.log('[main.js] Пользователь авторизован');
-                } else {
-                    console.warn('[main.js] Не удалось авторизовать пользователя через Telegram:', data);
-                    const profileName = document.getElementById('profile-name');
-                    const profileId = document.getElementById('profile-id');
-                    if (profileName) profileName.textContent = tgUser.username || tgUser.first_name || 'Игрок';
-                    if (profileId) profileId.textContent = 'ID: ' + tgUser.id;
-                    localStorage.setItem('user', JSON.stringify({
-                        id: tgUser.id,
-                        username: tgUser.username || tgUser.first_name || 'Игрок',
-                        first_name: tgUser.first_name,
-                        last_name: tgUser.last_name,
-                        photo_url: tgUser.photo_url
-                    }));
-                }
-            } catch (e) {
-                console.error('[main.js] Ошибка при авторизации через Telegram:', e);
-                const profileName = document.getElementById('profile-name');
-                const profileId = document.getElementById('profile-id');
-                if (profileName) profileName.textContent = tgUser.username || tgUser.first_name || 'Игрок';
-                if (profileId) profileId.textContent = 'ID: ' + tgUser.id;
-                localStorage.setItem('user', JSON.stringify({
-                    id: tgUser.id,
-                    username: tgUser.username || tgUser.first_name || 'Игрок',
-                    first_name: tgUser.first_name,
-                    last_name: tgUser.last_name,
-                    photo_url: tgUser.photo_url
-                }));
-            }
-        } else {
-            console.warn('[main.js] Нет данных Telegram WebApp или пользователь не авторизован');
-            const profileName = document.getElementById('profile-name');
-            const profileId = document.getElementById('profile-id');
-            if (profileName) profileName.textContent = 'Гость';
-            if (profileId) profileId.textContent = '';
-            localStorage.removeItem('user');
-            alert('Вход возможен только через Telegram WebApp!');
+        const response = await fetch('/api/user/profile', {
+            credentials: 'include'
+        });
+        const data = await response.json();
+        
+        if (data.success && data.user) {
+            // Обновляем информацию о пользователе
+            document.querySelector('.username').textContent = data.user.username || 'Игрок';
+            document.querySelector('.user-id').textContent = `ID: ${data.user.id || '12345678'}`;
+            document.querySelector('.balance span:last-child').textContent = data.user.coins || '0';
+            
+            // Обновляем статистику
+            const stats = data.user.stats || {};
+            document.querySelector('.stat-value:nth-child(1)').textContent = stats.gamesPlayed || '0';
+            document.querySelector('.stat-value:nth-child(2)').textContent = 
+                stats.gamesPlayed ? Math.round((stats.gamesWon / stats.gamesPlayed) * 100) + '%' : '0%';
+            document.querySelector('.stat-value:nth-child(3)').textContent = stats.rating || '0';
         }
     } catch (error) {
-        console.error('[main.js] Ошибка проверки авторизации:', error);
-        const profileName = document.getElementById('profile-name');
-        const profileId = document.getElementById('profile-id');
-        if (profileName) profileName.textContent = 'Гость';
-        if (profileId) profileId.textContent = '';
-        localStorage.removeItem('user');
-    } finally {
-        document.body.removeChild(loader);
+        console.error('Ошибка при загрузке данных пользователя:', error);
     }
+}
+
+// Загрузка последних игр
+async function loadRecentGames() {
+    try {
+        const response = await fetch('/api/user/recent-games', {
+            credentials: 'include'
+        });
+        const data = await response.json();
+        
+        if (data.success && data.games) {
+            const gamesList = document.querySelector('.games-list');
+            gamesList.innerHTML = data.games.map(game => `
+                <li class="game-item">
+                    <div class="game-result ${game.result === 'win' ? 'win' : 'lose'}">${game.result === 'win' ? 'W' : 'L'}</div>
+                    <div class="game-info">
+                        <div class="game-date">${formatDate(game.date)}</div>
+                        <div class="game-score">${game.result === 'win' ? 'Победа' : 'Поражение'} • ${game.points > 0 ? '+' : ''}${game.points} очков</div>
+                    </div>
+                </li>
+            `).join('');
+        }
+    } catch (error) {
+        console.error('Ошибка при загрузке последних игр:', error);
+    }
+}
+
+// Форматирование даты
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    const now = new Date();
+    const yesterday = new Date(now);
+    yesterday.setDate(yesterday.getDate() - 1);
+    
+    if (date.toDateString() === now.toDateString()) {
+        return `Сегодня, ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+    } else if (date.toDateString() === yesterday.toDateString()) {
+        return `Вчера, ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+    } else {
+        return date.toLocaleDateString('ru-RU', { 
+            day: 'numeric',
+            month: 'short',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+    }
+}
+
+// Обработчики нажатий на кнопки навигации
+document.querySelectorAll('.nav-item').forEach(item => {
+    item.addEventListener('click', function(e) {
+        const currentActive = document.querySelector('.nav-item.active');
+        if (currentActive) {
+            currentActive.classList.remove('active');
+        }
+        this.classList.add('active');
+    });
+});
+
+// Инициализация при загрузке страницы
+document.addEventListener('DOMContentLoaded', () => {
+    loadUserData();
+    loadRecentGames();
 });
 
 // Обработчики кнопок
@@ -216,6 +217,62 @@ document.addEventListener('DOMContentLoaded', function() {
             if (profileModalMsg) profileModalMsg.textContent = '';
         });
     }
+
+    // Обработка нижней навигации
+    const navItems = document.querySelectorAll('.nav-item');
+    navItems.forEach(item => {
+        item.addEventListener('click', function(e) {
+            e.preventDefault();
+            navItems.forEach(i => i.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Обработка переходов
+            switch(this.id) {
+                case 'nav-menu':
+                    // Уже на главной
+                    break;
+                case 'nav-friends':
+                    showFriendsModal();
+                    break;
+                case 'nav-profile':
+                    window.location.href = 'profile.html';
+                    break;
+                case 'nav-wallet':
+                    showWalletModal();
+                    break;
+                case 'nav-rules':
+                    showRulesModal();
+                    break;
+            }
+        });
+    });
+
+    // Обработка кнопок меню
+    document.getElementById('startGame').addEventListener('click', () => {
+        window.location.href = 'game-setup.html';
+    });
+
+    document.getElementById('playAI').addEventListener('click', () => {
+        // Сохраняем флаг игры с ИИ
+        localStorage.setItem('gameMode', 'ai');
+        window.location.href = 'game-setup.html';
+    });
+
+    document.getElementById('rating').addEventListener('click', () => {
+        showRatingModal();
+    });
+
+    document.getElementById('shop').addEventListener('click', () => {
+        window.location.href = 'shop.html';
+    });
+
+    document.getElementById('rules').addEventListener('click', () => {
+        showRulesModal();
+    });
+
+    document.getElementById('profile').addEventListener('click', () => {
+        window.location.href = 'profile.html';
+    });
 });
 
 // --- Модальное окно друзей ---
@@ -331,4 +388,41 @@ function setActiveMenuItem(element) {
         item.classList.remove('active');
     });
     element.classList.add('active');
+}
+
+// Модальные окна
+function showWalletModal() {
+    // Реализация модального окна кошелька
+}
+
+function showRatingModal() {
+    // Реализация модального окна рейтинга
+}
+
+function showRulesModal() {
+    // Реализация модального окна правил
+}
+
+// Утилиты
+function safeShowModal(content, options = {}) {
+    const modal = document.createElement('div');
+    modal.className = 'modal';
+    modal.innerHTML = `
+        <div class="modal-content">
+            <div class="modal-header">
+                ${options.title ? `<h2>${options.title}</h2>` : ''}
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                ${content}
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    modal.querySelector('.modal-close').onclick = () => {
+        modal.remove();
+        if (options.onClose) options.onClose();
+    };
 } 
