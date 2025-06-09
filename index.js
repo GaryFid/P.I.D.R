@@ -204,10 +204,6 @@ async function startApp() {
       }
     });
 
-    app.get('/register', (req, res) => {
-      res.sendFile(path.join(__dirname, 'public', 'register.html'));
-    });
-
     app.get('/game-setup', (req, res) => {
       res.sendFile(path.join(__dirname, 'public', 'game-setup.html'));
     });

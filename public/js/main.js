@@ -32,12 +32,12 @@ window.addEventListener('DOMContentLoaded', async function() {
         if (window.showToast) window.showToast('Не авторизован, редирект', 'error');
         console.warn('[main.js] Не авторизован, редирект на регистрацию');
         localStorage.removeItem('user');
-        window.location.replace('/register.html');
+        // window.location.replace('/register.html'); // Удалено
     } catch (error) {
         if (window.showToast) window.showToast('Ошибка проверки авторизации', 'error');
         console.error('[main.js] Ошибка проверки авторизации:', error);
         localStorage.removeItem('user');
-        window.location.replace('/register.html');
+        // window.location.replace('/register.html'); // Удалено
     }
 
     if (window.Telegram && window.Telegram.WebApp && Telegram.WebApp.initDataUnsafe && Telegram.WebApp.initDataUnsafe.user) {
@@ -92,7 +92,7 @@ window.addEventListener('DOMContentLoaded', async function() {
 document.getElementById('start-game').addEventListener('click', function() {
     var user = localStorage.getItem('user');
     if (!user) {
-        window.location.href = '/register.html';
+        // window.location.href = '/register.html'; // Удалено
         return;
     }
     localStorage.setItem('gameSettings', JSON.stringify({ playerCount: 4, withAI: false }));
