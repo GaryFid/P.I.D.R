@@ -104,12 +104,6 @@ const User = sequelize.define('User', {
     type: DataTypes.BOOLEAN,
     defaultValue: true
   },
-  display_name: {
-    type: DataTypes.STRING
-  },
-  avatar_url: {
-    type: DataTypes.STRING
-  },
   school: { type: DataTypes.STRING, allowNull: true },
   referralCode: { type: DataTypes.STRING, unique: true, allowNull: true },
   telegram_username: {

@@ -270,4 +270,3 @@ async function startApp() {
 
 // Запускаем приложение
 startApp(); 
-startApp(); 

@@ -6,7 +6,7 @@ module.exports = {
         baseUrl: process.env.BASE_URL || 'http://localhost:3000'
     },
     database: {
-        url: process.env.DATA_BASE,
+        url: process.env.DATABASE_URL,
         dialect: 'postgres',
         ssl: true,
         dialectOptions: {
