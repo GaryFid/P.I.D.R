@@ -212,6 +212,38 @@ async function startApp() {
       res.sendFile(path.join(__dirname, 'public', 'game.html'));
     });
 
+    // Новый роут для Telegram WebApp авто-добавления
+    app.post('/api/telegram-auth', async (req, res) => {
+      try {
+        const { id, username, first_name, last_name, photo_url } = req.body;
+        if (!id) return res.status(400).json({ success: false, message: 'No telegram id' });
+        let user = await User.findOne({ where: { telegramId: id.toString() } });
+        if (!user) {
+          user = await User.create({
+            telegramId: id.toString(),
+            username: username || first_name || 'Игрок',
+            firstName: first_name,
+            lastName: last_name,
+            avatar: photo_url,
+            authType: 'telegram',
+            registrationDate: new Date()
+          });
+        } else {
+          // Обновим имя/аватар если изменились
+          let changed = false;
+          if (user.username !== (username || first_name || 'Игрок')) { user.username = username || first_name || 'Игрок'; changed = true; }
+          if (user.firstName !== first_name) { user.firstName = first_name; changed = true; }
+          if (user.lastName !== last_name) { user.lastName = last_name; changed = true; }
+          if (user.avatar !== photo_url) { user.avatar = photo_url; changed = true; }
+          if (changed) await user.save();
+        }
+        res.json({ success: true, user: user.toPublicJSON() });
+      } catch (error) {
+        console.error('Ошибка в /api/telegram-auth:', error);
+        res.status(500).json({ success: false, message: 'Ошибка сервера' });
+      }
+    });
+
     // Запуск сервера СРАЗУ, до запуска бота
     console.log('Готов к запуску сервера, сейчас будет listen...');
     app.listen(PORT, '0.0.0.0', () => {
