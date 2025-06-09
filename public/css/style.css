@@ -344,40 +344,200 @@ body#app-body {
 
 /* Общие стили */
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f5f5f5;
-    color: #2B2B2B;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    background: #fff;
+    color: #333;
+    min-height: 100vh;
+    padding-bottom: 70px; /* Отступ для нижней навигации */
 }
 
 .container {
-    max-width: 600px;
+    max-width: 100%;
+    padding: 16px;
     margin: 0 auto;
+    box-sizing: border-box;
+}
+
+/* Карточка профиля */
+.profile-card {
+    background: #fff;
+    border-radius: 16px;
     padding: 20px;
-    padding-bottom: 80px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.profile-avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.profile-info {
+    flex: 1;
+}
+
+.profile-name {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0 0 4px 0;
+}
+
+.profile-balance {
+    font-size: 16px;
+    color: #666;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.balance-icon {
+    color: #FFD700;
 }
 
 /* Карточки статистики */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
 .stat-card {
-    background: white;
+    background: #fff;
     border-radius: 12px;
-    padding: 20px;
-    margin-bottom: 15px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 16px;
     text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.3s ease;
 }
 
 .stat-value {
-    font-size: 32px;
-    font-weight: bold;
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 4px;
     color: #2B5278;
-    margin: 10px 0;
 }
 
 .stat-label {
+    font-size: 12px;
     color: #666;
+}
+
+/* Заголовки секций */
+.section-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 24px 0 16px;
+    color: #2B2B2B;
+}
+
+/* История игр */
+.game-history {
+    background: #fff;
+    border-radius: 16px;
+    padding: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.game-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.game-item:last-child {
+    border-bottom: none;
+}
+
+.game-result {
+    font-weight: 500;
+    padding: 4px 12px;
+    border-radius: 12px;
     font-size: 14px;
+}
+
+.game-result.win {
+    background: #E8F5E9;
+    color: #2E7D32;
+}
+
+.game-result.lose {
+    background: #FFEBEE;
+    color: #C62828;
+}
+
+/* Достижения */
+.achievements-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.achievement-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.achievement-icon {
+    font-size: 24px;
+    margin-bottom: 8px;
+}
+
+.achievement-title {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+.achievement-progress {
+    height: 4px;
+    background: #eee;
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.achievement-progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #2B5278, #4CAF50);
+    border-radius: 2px;
+    transition: width 0.3s ease;
+}
+
+/* Адаптивность */
+@media (max-width: 480px) {
+    .container {
+        padding: 12px;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .achievements-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .stat-value {
+        font-size: 20px;
+    }
+
+    .section-title {
+        font-size: 16px;
+    }
 }
 
 /* Нижняя навигация */
@@ -538,15 +698,6 @@ body {
     to { opacity: 1; }
 }
 
-/* Заголовки разделов */
-.section-title {
-    font-size: 20px;
-    font-weight: bold;
-    color: #2B2B2B;
-    margin: 20px 0;
-    padding: 0 20px;
-}
-
 /* Кнопки */
 .btn {
     background: linear-gradient(135deg, #2B5278, #3A6EA5);
@@ -562,77 +713,6 @@ body {
 
 .btn:active {
     transform: scale(0.98);
-}
-
-/* Карточки достижений */
-.achievement-card {
-    background: white;
-    border-radius: 12px;
-    padding: 15px;
-    margin: 10px;
-    text-align: center;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.achievement-icon {
-    font-size: 32px;
-    color: #FFD700;
-    margin-bottom: 10px;
-}
-
-.achievement-title {
-    font-weight: 500;
-    margin-bottom: 5px;
-}
-
-.achievement-progress {
-    width: 100%;
-    height: 4px;
-    background: #E0E0E0;
-    border-radius: 2px;
-    margin-top: 10px;
-}
-
-.achievement-progress-bar {
-    height: 100%;
-    background: linear-gradient(90deg, #2B5278, #3A6EA5);
-    border-radius: 2px;
-}
-
-/* Сетка достижений */
-.achievements-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
-    padding: 15px;
-}
-
-/* История игр */
-.game-history {
-    background: white;
-    border-radius: 12px;
-    margin: 15px;
-    overflow: hidden;
-}
-
-.game-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px;
-    border-bottom: 1px solid #E0E0E0;
-}
-
-.game-result {
-    font-weight: 500;
-}
-
-.game-result.win {
-    color: #4CAF50;
-}
-
-.game-result.lose {
-    color: #F44336;
 }
 
 /* Анимации */

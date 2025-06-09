@@ -10,20 +10,34 @@
 </head>
 <body>
     <div class="container">
+        <!-- Профиль -->
+        <div class="profile-card">
+            <img src="img/default-avatar.png" alt="Аватар" class="profile-avatar">
+            <div class="profile-info">
+                <h2 class="profile-name">Игрок</h2>
+                <div class="profile-balance">
+                    <i class="fas fa-coins balance-icon"></i>
+                    <span>1000</span>
+                </div>
+            </div>
+        </div>
+
         <!-- Статистика -->
-        <div class="stat-card animate-fade-in">
-            <div class="stat-value">42</div>
-            <div class="stat-label">Игр сыграно</div>
-        </div>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value">42</div>
+                <div class="stat-label">Игр сыграно</div>
+            </div>
 
-        <div class="stat-card animate-fade-in">
-            <div class="stat-value">65%</div>
-            <div class="stat-label">Процент побед</div>
-        </div>
+            <div class="stat-card">
+                <div class="stat-value">65%</div>
+                <div class="stat-label">Побед</div>
+            </div>
 
-        <div class="stat-card animate-fade-in">
-            <div class="stat-value">1234</div>
-            <div class="stat-label">Рейтинг</div>
+            <div class="stat-card">
+                <div class="stat-value">1234</div>
+                <div class="stat-label">Рейтинг</div>
+            </div>
         </div>
 
         <!-- Достижения -->
@@ -44,14 +58,6 @@
                     <div class="achievement-progress-bar" style="width: 80%"></div>
                 </div>
             </div>
-
-            <div class="achievement-card">
-                <div class="achievement-icon">⭐</div>
-                <div class="achievement-title">Профессионал</div>
-                <div class="achievement-progress">
-                    <div class="achievement-progress-bar" style="width: 60%"></div>
-                </div>
-            </div>
         </div>
 
         <!-- История игр -->
@@ -59,15 +65,15 @@
         <div class="game-history">
             <div class="game-item">
                 <span>Игра #42</span>
-                <span class="game-result win">Победа</span>
+                <span class="game-result win">Победа +25</span>
             </div>
             <div class="game-item">
                 <span>Игра #41</span>
-                <span class="game-result lose">Поражение</span>
+                <span class="game-result lose">Поражение -15</span>
             </div>
             <div class="game-item">
                 <span>Игра #40</span>
-                <span class="game-result win">Победа</span>
+                <span class="game-result win">Победа +20</span>
             </div>
         </div>
     </div>
@@ -128,11 +134,11 @@
             <i class="fas fa-users"></i>
             <span>Друзья</span>
         </a>
-        <a href="profile.html" class="nav-item">
+        <a href="#" class="nav-item" id="profileButton">
             <i class="fas fa-user"></i>
             <span>Профиль</span>
         </a>
-        <a href="shop.html" class="nav-item">
+        <a href="#" class="nav-item" id="walletButton">
             <i class="fas fa-wallet"></i>
             <span>Кошелек</span>
         </a>
