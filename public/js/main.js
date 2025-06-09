@@ -198,39 +198,41 @@ document.addEventListener('DOMContentLoaded', function() {
     const tg = window.Telegram.WebApp;
     tg.expand();
 
-    // Элементы меню
-    const menuButton = document.getElementById('menuButton');
-    const menuOverlay = document.querySelector('.menu-overlay');
-    const menuPanel = document.querySelector('.menu-panel');
-    const menuClose = document.querySelector('.menu-close');
-    const friendsButton = document.getElementById('friendsButton');
-    const rulesButton = document.getElementById('rulesButton');
-
-    // Обработчики для меню
-    menuButton.addEventListener('click', function(e) {
-        e.preventDefault();
-        menuOverlay.classList.add('active');
-        menuPanel.classList.add('active');
-        document.body.style.overflow = 'hidden';
-    });
-
-    menuClose.addEventListener('click', function() {
-        closeMenu();
-    });
-
-    menuOverlay.addEventListener('click', function(e) {
-        if (e.target === menuOverlay) {
-            closeMenu();
-        }
-    });
-
-    function closeMenu() {
-        menuOverlay.classList.remove('active');
-        menuPanel.classList.remove('active');
-        document.body.style.overflow = '';
+    // Кнопка "Назад"
+    const backButton = document.getElementById('backButton');
+    if (backButton) {
+        backButton.addEventListener('click', function() {
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                tg.close();
+            }
+        });
     }
 
-    // Обработчики для нижней навигации
+    // Обработка приглашения друзей
+    const inviteFriendsButton = document.getElementById('inviteFriends');
+    if (inviteFriendsButton) {
+        inviteFriendsButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            // Здесь можно добавить логику для приглашения друзей через Telegram
+            tg.showPopup({
+                title: 'Пригласить друзей',
+                message: 'Хотите пригласить друзей в игру?',
+                buttons: [
+                    {id: 'cancel', type: 'cancel', text: 'Отмена'},
+                    {id: 'invite', type: 'ok', text: 'Пригласить'}
+                ]
+            }, function(buttonId) {
+                if (buttonId === 'invite') {
+                    // Здесь будет логика приглашения
+                    tg.shareGame();
+                }
+            });
+        });
+    }
+
+    // Нижняя навигация
     const navItems = document.querySelectorAll('.nav-item');
     navItems.forEach(item => {
         item.addEventListener('click', function(e) {
@@ -242,64 +244,16 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Обработчики для пунктов меню
-    document.getElementById('inviteFriends').addEventListener('click', function(e) {
-        e.preventDefault();
-        tg.showScanQRPopup({
-            text: "Отсканируйте QR-код, чтобы присоединиться к игре"
+    // Обработка категорий
+    const categoryCards = document.querySelectorAll('.category-card');
+    categoryCards.forEach(card => {
+        card.addEventListener('click', function(e) {
+            if (this.getAttribute('href') === '#') {
+                e.preventDefault();
+            }
+            categoryCards.forEach(c => c.classList.remove('active'));
+            this.classList.add('active');
         });
-    });
-
-    document.getElementById('showRules').addEventListener('click', function(e) {
-        e.preventDefault();
-        // Здесь можно добавить логику показа правил
-        closeMenu();
-        rulesButton.click();
-    });
-
-    document.getElementById('showSettings').addEventListener('click', function(e) {
-        e.preventDefault();
-        // Здесь можно добавить логику показа настроек
-        closeMenu();
-    });
-
-    document.getElementById('showStats').addEventListener('click', function(e) {
-        e.preventDefault();
-        // Здесь можно добавить логику показа статистики
-        closeMenu();
-    });
-
-    document.getElementById('showAchievements').addEventListener('click', function(e) {
-        e.preventDefault();
-        // Здесь можно добавить логику показа достижений
-        closeMenu();
-    });
-
-    document.getElementById('showHelp').addEventListener('click', function(e) {
-        e.preventDefault();
-        // Здесь можно добавить логику показа помощи
-        closeMenu();
-    });
-
-    // Обработчик для кнопки "Друзья"
-    friendsButton.addEventListener('click', function(e) {
-        e.preventDefault();
-        // Здесь можно добавить логику показа списка друзей
-    });
-
-    // Обработчик для кнопки "Правила"
-    rulesButton.addEventListener('click', function(e) {
-        e.preventDefault();
-        // Здесь можно добавить логику показа правил
-    });
-
-    // Анимации для статистики
-    const statCards = document.querySelectorAll('.stat-card');
-    statCards.forEach((card, index) => {
-        setTimeout(() => {
-            card.style.opacity = '1';
-            card.style.transform = 'translateY(0)';
-        }, index * 100);
     });
 });
 

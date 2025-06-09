@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>P.I.D.R. - Главное меню</title>
+    <title>P.I.D.R. - Кошелек</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -14,7 +14,7 @@
         <button class="back-button" id="backButton">
             <i class="fas fa-arrow-left"></i>
         </button>
-        <h1 class="page-title">P.I.D.R.</h1>
+        <h1 class="page-title">Кошелек</h1>
         <div style="width: 24px;"></div>
     </header>
 
@@ -27,67 +27,64 @@
     <!-- Категории -->
     <h2 class="categories-title">Категории</h2>
     <div class="categories-grid">
-        <a href="game-setup.html" class="category-card">
+        <a href="#" class="category-card active">
             <div class="category-icon">
-                <i class="fas fa-play"></i>
+                <i class="fas fa-coins"></i>
             </div>
-            <div class="category-name">Играть</div>
+            <div class="category-name">Монеты</div>
         </a>
-        <a href="#" class="category-card" id="inviteFriends">
+        <a href="#" class="category-card">
             <div class="category-icon">
-                <i class="fas fa-user-plus"></i>
+                <i class="fas fa-gift"></i>
             </div>
-            <div class="category-name">Пригласить</div>
+            <div class="category-name">Бонусы</div>
         </a>
-        <a href="shop.html" class="category-card">
+        <a href="#" class="category-card">
             <div class="category-icon">
-                <i class="fas fa-store"></i>
+                <i class="fas fa-history"></i>
             </div>
-            <div class="category-name">Магазин</div>
+            <div class="category-name">История</div>
         </a>
     </div>
 
-    <!-- Статистика -->
-    <h2 class="products-title">Статистика</h2>
+    <!-- Доступные товары -->
+    <h2 class="products-title">Доступные товары</h2>
     <div class="products-grid">
         <div class="product-card">
-            <div class="product-title">42</div>
-            <div class="product-description">Игр сыграно</div>
-        </div>
-        <div class="product-card">
-            <div class="product-title">65%</div>
-            <div class="product-description">Процент побед</div>
-        </div>
-        <div class="product-card">
-            <div class="product-title">1234</div>
-            <div class="product-description">Рейтинг</div>
-        </div>
-    </div>
-
-    <!-- История игр -->
-    <h2 class="products-title">История игр</h2>
-    <div class="products-grid">
-        <div class="product-card">
-            <div class="product-title">Игра #42</div>
-            <div class="product-description">Победа</div>
+            <div class="product-image"></div>
+            <h3 class="product-title">100 монет</h3>
+            <p class="product-description">Пополнение баланса</p>
             <div class="product-price">
-                <i class="fas fa-plus price-icon" style="color: #4CAF50;"></i>
-                <span class="price-amount" style="color: #4CAF50;">+25</span>
+                <i class="fas fa-coins price-icon"></i>
+                <span class="price-amount">100₽</span>
             </div>
+            <button class="buy-button">Купить</button>
         </div>
         <div class="product-card">
-            <div class="product-title">Игра #41</div>
-            <div class="product-description">Поражение</div>
+            <div class="product-image"></div>
+            <h3 class="product-title">500 монет</h3>
+            <p class="product-description">Пополнение баланса</p>
             <div class="product-price">
-                <i class="fas fa-minus price-icon" style="color: #F44336;"></i>
-                <span class="price-amount" style="color: #F44336;">-15</span>
+                <i class="fas fa-coins price-icon"></i>
+                <span class="price-amount">400₽</span>
             </div>
+            <button class="buy-button">Купить</button>
+        </div>
+        <div class="product-card">
+            <div class="product-image"></div>
+            <h3 class="product-title">1000 монет</h3>
+            <p class="product-description">Пополнение баланса</p>
+            <div class="product-price">
+                <i class="fas fa-coins price-icon"></i>
+                <span class="price-amount">700₽</span>
+            </div>
+            <button class="buy-button">Купить</button>
         </div>
     </div>
 
     <!-- Нижняя навигация -->
     <nav class="bottom-nav">
-        <a href="index.html" class="nav-item active">
+        <a href="index.html" class="nav-item">
             <i class="fas fa-gamepad"></i>
             <span>Меню</span>
         </a>
@@ -99,7 +96,7 @@
             <i class="fas fa-user"></i>
             <span>Профиль</span>
         </a>
-        <a href="wallet.html" class="nav-item">
+        <a href="wallet.html" class="nav-item active">
             <i class="fas fa-wallet"></i>
             <span>Кошелек</span>
         </a>
@@ -109,6 +106,6 @@
         </a>
     </nav>
 
-    <script src="js/main.js"></script>
+    <script src="js/wallet.js"></script>
 </body>
 </html> 
