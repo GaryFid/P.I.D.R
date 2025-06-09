@@ -7,235 +7,105 @@ tg.expand();
 // Состояние настроек
 let gameSettings = {
     playerCount: 2,
-    timeLimit: 0, // 0 = без ограничения
-    aiOpponents: 0,
-    customRules: []
+    gameMode: 'classic',
+    timeLimit: false,
+    randomEvents: false,
+    aiOpponent: false
 };
 
-// Инициализация страницы
-function initSetup() {
-    // Инициализация слайдера количества игроков
-    const playerCountSlider = document.querySelector('#player-count');
-    const playerCountValue = document.querySelector('#player-count-value');
-    
-    playerCountSlider.addEventListener('input', (e) => {
-        const value = parseInt(e.target.value);
-        gameSettings.playerCount = value;
-        playerCountValue.textContent = value;
-        updateAIOptions(value);
-    });
-    
-    // Инициализация переключателя времени
-    document.querySelectorAll('input[name="time-limit"]').forEach(radio => {
-        radio.addEventListener('change', (e) => {
-            gameSettings.timeLimit = parseInt(e.target.value);
-        });
-    });
-    
-    // Инициализация слайдера ИИ противников
-    const aiSlider = document.querySelector('#ai-opponents');
-    const aiValue = document.querySelector('#ai-value');
-    
-    aiSlider.addEventListener('input', (e) => {
-        const value = parseInt(e.target.value);
-        gameSettings.aiOpponents = value;
-        aiValue.textContent = value;
-    });
-    
-    // Инициализация чекбоксов правил
-    document.querySelectorAll('.rule-checkbox').forEach(checkbox => {
-        checkbox.addEventListener('change', (e) => {
-            const ruleId = e.target.dataset.ruleId;
-            if (e.target.checked) {
-                gameSettings.customRules.push(ruleId);
-            } else {
-                const index = gameSettings.customRules.indexOf(ruleId);
-                if (index > -1) {
-                    gameSettings.customRules.splice(index, 1);
-                }
-            }
-        });
-    });
-}
-
-// Обновление опций ИИ в зависимости от количества игроков
-function updateAIOptions(playerCount) {
-    const aiSlider = document.querySelector('#ai-opponents');
-    const maxAI = Math.max(0, playerCount - 1); // Минимум 1 реальный игрок
-    
-    aiSlider.max = maxAI;
-    if (gameSettings.aiOpponents > maxAI) {
-        aiSlider.value = maxAI;
-        gameSettings.aiOpponents = maxAI;
-        document.querySelector('#ai-value').textContent = maxAI;
+// Управление количеством игроков
+function decrementPlayers() {
+    if (gameSettings.playerCount > 2) {
+        gameSettings.playerCount--;
+        updatePlayerCount();
     }
-    
-    // Отключаем слайдер, если нельзя добавить ИИ
-    aiSlider.disabled = maxAI === 0;
 }
 
-// Создание игры
-async function createGame() {
+function incrementPlayers() {
+    if (gameSettings.playerCount < 6) {
+        gameSettings.playerCount++;
+        updatePlayerCount();
+    }
+}
+
+function updatePlayerCount() {
+    const countElement = document.getElementById('playerCount');
+    countElement.textContent = gameSettings.playerCount;
+    
+    // Обновляем текст "игрока/игроков"
+    const smallElement = countElement.nextElementSibling;
+    if (gameSettings.playerCount === 1) {
+        smallElement.textContent = 'игрок';
+    } else if (gameSettings.playerCount < 5) {
+        smallElement.textContent = 'игрока';
+    } else {
+        smallElement.textContent = 'игроков';
+    }
+}
+
+// Управление режимами игры
+document.querySelectorAll('.mode-card').forEach(card => {
+    card.addEventListener('click', () => {
+        // Убираем активный класс у всех карточек
+        document.querySelectorAll('.mode-card').forEach(c => c.classList.remove('active'));
+        // Добавляем активный класс выбранной карточке
+        card.classList.add('active');
+        // Сохраняем выбранный режим
+        gameSettings.gameMode = card.dataset.mode;
+    });
+});
+
+// Управление дополнительными настройками
+document.getElementById('timeLimit').addEventListener('change', (e) => {
+    gameSettings.timeLimit = e.target.checked;
+});
+
+document.getElementById('randomEvents').addEventListener('change', (e) => {
+    gameSettings.randomEvents = e.target.checked;
+});
+
+document.getElementById('aiOpponent').addEventListener('change', (e) => {
+    gameSettings.aiOpponent = e.target.checked;
+});
+
+// Начало игры
+async function startGame() {
     try {
         const response = await fetch('/api/game/create', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            credentials: 'include',
-            body: JSON.stringify(gameSettings)
+            body: JSON.stringify(gameSettings),
+            credentials: 'include'
         });
+        
         const data = await response.json();
         
         if (data.success) {
-            // Показываем окно с кодом игры
-            showGameCode(data.gameCode);
+            // Переходим на страницу игры
+            window.location.href = `game.html?id=${data.gameId}`;
         } else {
-            showError(data.error || 'Ошибка при создании игры');
+            // Показываем ошибку
+            tg.showPopup({
+                title: 'Ошибка',
+                message: data.error || 'Не удалось создать игру',
+                buttons: [{ type: 'ok' }]
+            });
         }
     } catch (error) {
         console.error('Ошибка при создании игры:', error);
-        showError('Произошла ошибка при создании игры');
+        tg.showPopup({
+            title: 'Ошибка',
+            message: 'Произошла ошибка при создании игры',
+            buttons: [{ type: 'ok' }]
+        });
     }
 }
 
-// Показ кода игры
-function showGameCode(code) {
-    const modal = document.createElement('div');
-    modal.className = 'modal';
-    modal.innerHTML = `
-        <div class="modal-content">
-            <h3>Игра создана!</h3>
-            <p>Поделитесь этим кодом с друзьями:</p>
-            <div class="game-code">${code}</div>
-            <button class="copy-code">Скопировать код</button>
-            <button class="start-game">Начать игру</button>
-        </div>
-    `;
-    
-    document.body.appendChild(modal);
-    
-    // Копирование кода
-    modal.querySelector('.copy-code').addEventListener('click', () => {
-        navigator.clipboard.writeText(code).then(() => {
-            showNotification('Код скопирован!', 'success');
-        });
-    });
-    
-    // Начало игры
-    modal.querySelector('.start-game').addEventListener('click', () => {
-        window.location.href = `/game.html?code=${code}`;
-    });
-}
-
-// Показ ошибки
-function showError(message) {
-    const notification = document.createElement('div');
-    notification.className = 'notification error';
-    notification.textContent = message;
-    
-    document.body.appendChild(notification);
-    
-    setTimeout(() => {
-        notification.classList.add('fade-out');
-        setTimeout(() => {
-            document.body.removeChild(notification);
-        }, 300);
-    }, 3000);
-}
-
-// Показ уведомления
-function showNotification(message, type = 'info') {
-    const notification = document.createElement('div');
-    notification.className = `notification ${type}`;
-    notification.textContent = message;
-    
-    document.body.appendChild(notification);
-    
-    setTimeout(() => {
-        notification.classList.add('fade-out');
-        setTimeout(() => {
-            document.body.removeChild(notification);
-        }, 300);
-    }, 3000);
-}
-
-// Инициализация при загрузке страницы
+// Инициализация страницы
 document.addEventListener('DOMContentLoaded', () => {
-    initSetup();
-    
-    // Обработчик кнопки создания игры
-    document.querySelector('.create-game').addEventListener('click', createGame);
-});
-
-document.addEventListener('DOMContentLoaded', function() {
-    var tgApp = window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp : null;
-    if (tgApp) tgApp.expand();
-    if (tgApp && tgApp.themeParams) {
-        document.documentElement.style.setProperty('--tg-theme-bg-color', tgApp.themeParams.bg_color || '#ffffff');
-        document.documentElement.style.setProperty('--tg-theme-text-color', tgApp.themeParams.text_color || '#000000');
-        document.documentElement.style.setProperty('--tg-theme-button-color', tgApp.themeParams.button_color || '#3390ec');
-        document.documentElement.style.setProperty('--tg-theme-button-text-color', tgApp.themeParams.button_text_color || '#ffffff');
-    }
-    var user = window.getCurrentUser ? window.getCurrentUser() : null;
-    var playerCount = 4;
-    var withAI = false;
-    // Выбор стола
-    var tables = document.querySelectorAll('.oval-table');
-    tables.forEach(function(table) {
-        table.addEventListener('click', function() {
-            playerCount = +table.dataset.players;
-            tables.forEach(function(t) { t.classList.remove('selected'); });
-            table.classList.add('selected');
-        });
-    });
-    // Переключатель ботов
-    var aiCheckbox = document.getElementById('with-ai');
-    if (aiCheckbox) {
-        aiCheckbox.addEventListener('change', function(e) {
-            withAI = e.target.checked;
-        });
-    }
-    // Кнопка "Начать игру"
-    var startBtn = document.getElementById('start-game-btn');
-    if (startBtn) {
-        startBtn.addEventListener('click', async function() {
-            try {
-                var res = await fetch('/api/games/create', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        userId: user && user.id,
-                        username: user && user.username,
-                        playerCount: playerCount,
-                        withAI: withAI
-                    })
-                });
-                var data = await res.json();
-                if (data.game && data.game.id) {
-                    window.location.href = '/game.html?id=' + data.game.id;
-                } else {
-                    window.showToast('Ошибка при создании игры', 'error');
-                }
-            } catch (e) {
-                window.showToast('Ошибка при создании игры', 'error');
-            }
-        });
-    }
-    // Кнопка "Назад"
-    var backBtn = document.getElementById('back-btn');
-    if (backBtn) {
-        backBtn.addEventListener('click', function() {
-            window.location.href = '/index.html';
-        });
-    }
-    // Кнопка "Правила игры"
-    var rulesBtn = document.getElementById('rules-btn');
-    if (rulesBtn) {
-        rulesBtn.addEventListener('click', function() {
-            window.showModal('Правила', '<p>Правила игры будут здесь.</p>');
-        });
-    }
+    updatePlayerCount();
 });
 
 // Получение элементов интерфейса

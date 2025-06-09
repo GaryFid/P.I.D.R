@@ -19,21 +19,79 @@ async function loadUserData() {
         const data = await response.json();
         
         if (data.success && data.user) {
-            // Обновляем информацию о пользователе
-            document.querySelector('.username').textContent = data.user.username || 'Игрок';
-            document.querySelector('.user-id').textContent = `ID: ${data.user.id || '12345678'}`;
-            document.querySelector('.balance span:last-child').textContent = data.user.coins || '0';
-            
             // Обновляем статистику
-            const stats = data.user.stats || {};
-            document.querySelector('.stat-value:nth-child(1)').textContent = stats.gamesPlayed || '0';
-            document.querySelector('.stat-value:nth-child(2)').textContent = 
-                stats.gamesPlayed ? Math.round((stats.gamesWon / stats.gamesPlayed) * 100) + '%' : '0%';
-            document.querySelector('.stat-value:nth-child(3)').textContent = stats.rating || '0';
+            updateStatistics(data.user.stats);
+            // Обновляем достижения
+            updateAchievements(data.user.achievements);
+            // Обновляем историю игр
+            updateGameHistory(data.user.gameHistory);
         }
     } catch (error) {
         console.error('Ошибка при загрузке данных пользователя:', error);
     }
+}
+
+// Обновление статистики
+function updateStatistics(stats = {}) {
+    const defaultStats = {
+        gamesPlayed: 42,
+        winRate: 65,
+        rating: 1234
+    };
+    
+    const finalStats = { ...defaultStats, ...stats };
+    
+    document.querySelectorAll('.stat-card').forEach(card => {
+        const label = card.querySelector('.stat-label').textContent.toLowerCase();
+        if (label.includes('сыграно')) {
+            card.querySelector('.stat-value').textContent = finalStats.gamesPlayed;
+        } else if (label.includes('побед')) {
+            card.querySelector('.stat-value').textContent = finalStats.winRate + '%';
+        } else if (label.includes('рейтинг')) {
+            card.querySelector('.stat-value').textContent = finalStats.rating;
+        }
+    });
+}
+
+// Обновление достижений
+function updateAchievements(achievements = []) {
+    const defaultAchievements = [
+        { id: 'first_win', title: 'Первая победа', progress: 100, icon: '🏆' },
+        { id: 'games_10', title: '10 игр', progress: 80, icon: '🎮' },
+        { id: 'pro', title: 'Профессионал', progress: 60, icon: '⭐' }
+    ];
+    
+    const finalAchievements = achievements.length ? achievements : defaultAchievements;
+    
+    const container = document.querySelector('.achievements-grid');
+    container.innerHTML = finalAchievements.map(achievement => `
+        <div class="achievement-card">
+            <div class="achievement-icon">${achievement.icon}</div>
+            <div class="achievement-title">${achievement.title}</div>
+            <div class="achievement-progress">
+                <div class="achievement-progress-bar" style="width: ${achievement.progress}%"></div>
+            </div>
+        </div>
+    `).join('');
+}
+
+// Обновление истории игр
+function updateGameHistory(history = []) {
+    const defaultHistory = [
+        { id: 42, result: 'win', title: 'Игра #42' },
+        { id: 41, result: 'lose', title: 'Игра #41' },
+        { id: 40, result: 'win', title: 'Игра #40' }
+    ];
+    
+    const finalHistory = history.length ? history : defaultHistory;
+    
+    const container = document.querySelector('.game-history');
+    container.innerHTML = finalHistory.map(game => `
+        <div class="game-item">
+            <span>${game.title}</span>
+            <span class="game-result ${game.result}">${game.result === 'win' ? 'Победа' : 'Поражение'}</span>
+        </div>
+    `).join('');
 }
 
 // Загрузка последних игр
@@ -84,12 +142,11 @@ function formatDate(dateString) {
 
 // Обработчики нажатий на кнопки навигации
 document.querySelectorAll('.nav-item').forEach(item => {
-    item.addEventListener('click', function(e) {
-        const currentActive = document.querySelector('.nav-item.active');
-        if (currentActive) {
-            currentActive.classList.remove('active');
+    item.addEventListener('click', (e) => {
+        if (item.getAttribute('href') === '#') {
+            e.preventDefault();
+            // Здесь можно добавить обработку для модальных окон
         }
-        this.classList.add('active');
     });
 });
 

@@ -353,119 +353,107 @@ footer {
 /* === Категории === */
 .shop-categories {
     display: flex;
-    gap: 16px;
-    margin-bottom: 32px;
+    gap: 15px;
     overflow-x: auto;
-    padding-bottom: 8px;
+    padding: 10px 0;
+    margin: 0 -20px;
+    padding: 10px 20px;
+    -webkit-overflow-scrolling: touch;
 }
 
-.category-btn {
-    padding: 12px 24px;
+.category-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 15px 25px;
     background: white;
-    border: none;
-    border-radius: var(--border-radius);
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: var(--text-main);
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     cursor: pointer;
-    transition: var(--transition);
-    box-shadow: var(--menu-shadow);
-    white-space: nowrap;
+    transition: all 0.3s ease;
+    min-width: 100px;
 }
 
-.category-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(255, 215, 0, 0.2);
+.category-card i {
+    font-size: 24px;
+    margin-bottom: 8px;
+    color: #2B5278;
 }
 
-.category-btn.active {
-    background: var(--emerald);
+.category-card span {
+    font-size: 14px;
+    color: #666;
+}
+
+.category-card.active {
+    background: linear-gradient(135deg, #2B5278, #3A6EA5);
+}
+
+.category-card.active i,
+.category-card.active span {
     color: white;
 }
 
 /* === Товары === */
-.products-grid {
+.shop-items {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 24px;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 20px 0;
 }
 
-.product-card {
+.shop-item {
     background: white;
-    border-radius: var(--border-radius);
+    border-radius: 12px;
     overflow: hidden;
-    transition: var(--transition);
-    box-shadow: var(--menu-shadow);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
 }
 
-.product-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 32px rgba(255, 215, 0, 0.2);
+.shop-item:hover {
+    transform: translateY(-5px);
 }
 
-.product-image {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-    border-bottom: 1px solid rgba(26, 188, 156, 0.1);
-}
-
-.product-info {
-    padding: 20px;
-}
-
-.product-name {
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: var(--text-main);
-    margin-bottom: 8px;
-}
-
-.product-description {
-    font-size: 0.9rem;
-    color: var(--text-main);
-    opacity: 0.7;
-    margin-bottom: 16px;
-    line-height: 1.5;
-}
-
-.product-footer {
+.item-preview {
+    height: 120px;
+    background: linear-gradient(135deg, #2B5278, #3A6EA5);
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 16px;
+    justify-content: center;
 }
 
-.product-price {
+.item-preview i {
+    font-size: 48px;
+    color: white;
+}
+
+.item-info {
+    padding: 15px;
+}
+
+.item-info h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #2B2B2B;
+    margin: 0 0 5px 0;
+}
+
+.item-info p {
+    font-size: 14px;
+    color: #666;
+    margin: 0 0 15px 0;
+}
+
+.item-price {
     display: flex;
     align-items: center;
-    gap: 8px;
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: var(--emerald);
+    gap: 5px;
+    color: #2B5278;
+    font-weight: 500;
 }
 
-.price-icon {
-    font-size: 1.4rem;
-    color: var(--gold);
-}
-
-.buy-btn {
-    padding: 8px 16px;
-    background: var(--btn-gradient);
-    border: none;
-    border-radius: var(--border-radius);
-    color: var(--text-main);
-    font-weight: 600;
-    cursor: pointer;
-    transition: var(--transition);
-    box-shadow: var(--btn-shadow);
-}
-
-.buy-btn:hover {
-    background: var(--btn-gradient-hover);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(255, 215, 0, 0.3);
+.item-price i {
+    color: #FFD700;
 }
 
 /* === Специальные предложения === */
@@ -589,7 +577,7 @@ footer {
         font-size: 1.8rem;
     }
 
-    .products-grid {
+    .shop-items {
         gap: 20px;
     }
 }
@@ -619,25 +607,24 @@ footer {
         gap: 12px;
     }
 
-    .category-btn {
+    .category-card {
         padding: 10px 20px;
-        font-size: 1rem;
     }
 
-    .products-grid {
+    .shop-items {
         gap: 16px;
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     }
 
-    .product-image {
+    .item-preview {
         height: 160px;
     }
 
-    .product-info {
+    .item-info {
         padding: 16px;
     }
 
-    .product-name {
+    .item-info h3 {
         font-size: 1.1rem;
     }
 
@@ -678,39 +665,41 @@ footer {
         gap: 8px;
     }
 
-    .category-btn {
+    .category-card {
         padding: 8px 16px;
-        font-size: 0.9rem;
     }
 
-    .products-grid {
+    .category-card i {
+        font-size: 20px;
+    }
+
+    .category-card span {
+        font-size: 12px;
+    }
+
+    .shop-items {
         gap: 12px;
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     }
 
-    .product-image {
+    .item-preview {
         height: 140px;
     }
 
-    .product-info {
+    .item-info {
         padding: 12px;
     }
 
-    .product-name {
+    .item-info h3 {
         font-size: 1rem;
     }
 
-    .product-description {
+    .item-info p {
         font-size: 0.85rem;
     }
 
-    .product-price {
+    .item-price {
         font-size: 1.1rem;
-    }
-
-    .buy-btn {
-        padding: 6px 12px;
-        font-size: 0.9rem;
     }
 
     .section-title {
