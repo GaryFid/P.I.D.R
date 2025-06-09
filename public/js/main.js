@@ -194,141 +194,112 @@ document.getElementById('rating').addEventListener('click', function() {
 });
 
 document.addEventListener('DOMContentLoaded', function() {
-    // --- Анимация карт в header ---
-    const cardNames = [
-        '6_of_hearts','6_of_spades','6_of_diamonds','6_of_clubs',
-        '7_of_hearts','7_of_spades','7_of_diamonds','7_of_clubs',
-        '8_of_hearts','8_of_spades','8_of_diamonds','8_of_clubs',
-        '9_of_hearts','9_of_spades','9_of_diamonds','9_of_clubs',
-        '10_of_hearts','10_of_spades','10_of_diamonds','10_of_clubs',
-        'jack_of_hearts','jack_of_spades','jack_of_diamonds','jack_of_clubs',
-        'queen_of_hearts','queen_of_spades','queen_of_diamonds','queen_of_clubs',
-        'king_of_hearts','king_of_spades','king_of_diamonds','king_of_clubs',
-        'ace_of_hearts','ace_of_spades','ace_of_diamonds','ace_of_clubs',
-        '2_of_hearts','2_of_spades','2_of_diamonds','2_of_clubs',
-        '3_of_hearts','3_of_spades','3_of_diamonds','3_of_clubs',
-        '4_of_hearts','4_of_spades','4_of_diamonds','4_of_clubs',
-        '5_of_hearts','5_of_spades','5_of_diamonds','5_of_clubs'
-    ];
-    // Выбираем 5 случайных уникальных карт для header и main
-    let used = new Set();
-    let selectedCards = [];
-    for (let i = 0; i < 5; i++) {
-        let idx;
-        do { idx = Math.floor(Math.random() * cardNames.length); } while (used.has(idx));
-        used.add(idx);
-        selectedCards.push(cardNames[idx]);
-    }
-    // --- header-cards ---
-    const headerCards = document.getElementById('header-cards');
-    if (headerCards) {
-        headerCards.innerHTML = '';
-        for (let i = 0; i < selectedCards.length; i++) {
-            const card = document.createElement('img');
-            card.className = 'header-card-img';
-            card.src = `img/cards/${selectedCards[i]}.png`;
-            card.alt = selectedCards[i];
-            headerCards.appendChild(card);
+    // Инициализация Telegram WebApp
+    const tg = window.Telegram.WebApp;
+    tg.expand();
+
+    // Элементы меню
+    const menuButton = document.getElementById('menuButton');
+    const menuOverlay = document.querySelector('.menu-overlay');
+    const menuPanel = document.querySelector('.menu-panel');
+    const menuClose = document.querySelector('.menu-close');
+    const friendsButton = document.getElementById('friendsButton');
+    const rulesButton = document.getElementById('rulesButton');
+
+    // Обработчики для меню
+    menuButton.addEventListener('click', function(e) {
+        e.preventDefault();
+        menuOverlay.classList.add('active');
+        menuPanel.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    });
+
+    menuClose.addEventListener('click', function() {
+        closeMenu();
+    });
+
+    menuOverlay.addEventListener('click', function(e) {
+        if (e.target === menuOverlay) {
+            closeMenu();
         }
-    }
-    // --- main-card-loader ---
-    const mainLoader = document.getElementById('main-card-loader');
-    if (mainLoader) {
-        mainLoader.innerHTML = '';
-        for (let i = 0; i < selectedCards.length; i++) {
-            const card = document.createElement('img');
-            card.className = 'main-card-loader-img';
-            card.src = `img/cards/${selectedCards[i]}.png`;
-            card.alt = selectedCards[i];
-            mainLoader.appendChild(card);
-        }
-    }
-    // --- Кошелек: бургер-меню ---
-    const walletBlock = document.getElementById('wallet-block');
-    const walletBtn = document.getElementById('wallet-btn');
-    const walletDropdown = document.getElementById('wallet-dropdown');
-    if (walletBtn && walletBlock && walletDropdown) {
-        walletBtn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            walletBlock.classList.toggle('open');
-        });
-        // Закрытие меню при клике вне
-        document.addEventListener('click', function(e) {
-            if (!walletBlock.contains(e.target)) {
-                walletBlock.classList.remove('open');
-            }
-        });
-    }
-    // --- Открытие модалки профиля из блока в шапке ---
-    const profileBlock = document.querySelector('.profile-block');
-    if (profileBlock) {
-        profileBlock.addEventListener('click', function() {
-            const user = JSON.parse(localStorage.getItem('user') || '{}');
-            const modalNick = document.getElementById('modalNick');
-            const modalAvatar = document.getElementById('modalAvatar');
-            const profileModal = document.getElementById('profileModal');
-            const profileModalMsg = document.getElementById('profileModalMsg');
-            if (modalNick) modalNick.value = user.username || '';
-            if (modalAvatar) modalAvatar.src = user.avatar || 'img/player-avatar.svg';
-            if (profileModal) profileModal.style.display = 'flex';
-            if (profileModalMsg) profileModalMsg.textContent = '';
-        });
+    });
+
+    function closeMenu() {
+        menuOverlay.classList.remove('active');
+        menuPanel.classList.remove('active');
+        document.body.style.overflow = '';
     }
 
-    // Обработка нижней навигации
+    // Обработчики для нижней навигации
     const navItems = document.querySelectorAll('.nav-item');
     navItems.forEach(item => {
         item.addEventListener('click', function(e) {
-            e.preventDefault();
-            navItems.forEach(i => i.classList.remove('active'));
-            this.classList.add('active');
-            
-            // Обработка переходов
-            switch(this.id) {
-                case 'nav-menu':
-                    // Уже на главной
-                    break;
-                case 'nav-friends':
-                    showFriendsModal();
-                    break;
-                case 'nav-profile':
-                    window.location.href = 'profile.html';
-                    break;
-                case 'nav-wallet':
-                    showWalletModal();
-                    break;
-                case 'nav-rules':
-                    showRulesModal();
-                    break;
+            if (this.getAttribute('href') === '#') {
+                e.preventDefault();
             }
+            navItems.forEach(navItem => navItem.classList.remove('active'));
+            this.classList.add('active');
         });
     });
 
-    // Обработка кнопок меню
-    document.getElementById('startGame').addEventListener('click', () => {
-        window.location.href = 'game-setup.html';
+    // Обработчики для пунктов меню
+    document.getElementById('inviteFriends').addEventListener('click', function(e) {
+        e.preventDefault();
+        tg.showScanQRPopup({
+            text: "Отсканируйте QR-код, чтобы присоединиться к игре"
+        });
     });
 
-    document.getElementById('playAI').addEventListener('click', () => {
-        // Сохраняем флаг игры с ИИ
-        localStorage.setItem('gameMode', 'ai');
-        window.location.href = 'game-setup.html';
+    document.getElementById('showRules').addEventListener('click', function(e) {
+        e.preventDefault();
+        // Здесь можно добавить логику показа правил
+        closeMenu();
+        rulesButton.click();
     });
 
-    document.getElementById('rating').addEventListener('click', () => {
-        showRatingModal();
+    document.getElementById('showSettings').addEventListener('click', function(e) {
+        e.preventDefault();
+        // Здесь можно добавить логику показа настроек
+        closeMenu();
     });
 
-    document.getElementById('shop').addEventListener('click', () => {
-        window.location.href = 'shop.html';
+    document.getElementById('showStats').addEventListener('click', function(e) {
+        e.preventDefault();
+        // Здесь можно добавить логику показа статистики
+        closeMenu();
     });
 
-    document.getElementById('rules').addEventListener('click', () => {
-        showRulesModal();
+    document.getElementById('showAchievements').addEventListener('click', function(e) {
+        e.preventDefault();
+        // Здесь можно добавить логику показа достижений
+        closeMenu();
     });
 
-    document.getElementById('profile').addEventListener('click', () => {
-        window.location.href = 'profile.html';
+    document.getElementById('showHelp').addEventListener('click', function(e) {
+        e.preventDefault();
+        // Здесь можно добавить логику показа помощи
+        closeMenu();
+    });
+
+    // Обработчик для кнопки "Друзья"
+    friendsButton.addEventListener('click', function(e) {
+        e.preventDefault();
+        // Здесь можно добавить логику показа списка друзей
+    });
+
+    // Обработчик для кнопки "Правила"
+    rulesButton.addEventListener('click', function(e) {
+        e.preventDefault();
+        // Здесь можно добавить логику показа правил
+    });
+
+    // Анимации для статистики
+    const statCards = document.querySelectorAll('.stat-card');
+    statCards.forEach((card, index) => {
+        setTimeout(() => {
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+        }, index * 100);
     });
 });
 
