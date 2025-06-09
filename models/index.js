@@ -8,10 +8,10 @@ const Friendship = require('./friendship');
 async function initDatabase() {
     try {
         // Проверяем существование таблиц
-        const [tables] = await sequelize.query(
+        const [results] = await sequelize.query(
             "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public';"
         );
-        
+        const tables = Array.isArray(results) ? results : [];
         const usersTableExists = tables.some(table => table.table_name === 'users');
         const gamesTableExists = tables.some(table => table.table_name === 'games');
         
