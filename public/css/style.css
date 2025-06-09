@@ -384,29 +384,28 @@ select:focus {
     60% { transform: translateY(-8px) scale(1.04); filter: brightness(1.08); }
 }
 
+/* --- КРАСИВОЕ ГЛАВНОЕ МЕНЮ --- */
 .card-menu {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 24px;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 32px;
     margin: 0 auto;
     width: 100%;
-    max-width: 600px;
-    background: rgba(255,255,255,0.04);
-    border-radius: 18px;
-    box-shadow: 0 4px 32px rgba(30,80,220,0.08);
-    padding: 24px 0 18px 0;
+    max-width: 700px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 22px;
+    box-shadow: 0 8px 40px rgba(30,80,220,0.13);
+    padding: 36px 0 28px 0;
     animation: menu-fade-in 1.2s;
 }
-
 @keyframes menu-fade-in {
-    from { opacity: 0; transform: translateY(40px); }
+    from { opacity: 0; transform: translateY(60px); }
     to { opacity: 1; transform: translateY(0); }
 }
-
 .menu-item {
-    background: linear-gradient(90deg, #2e3192 0%, #1bffff 100%);
-    border-radius: 14px;
-    padding: 24px 15px;
+    background: linear-gradient(120deg, #2e3192 0%, #1bffff 100%);
+    border-radius: 18px;
+    padding: 32px 18px;
     text-align: center;
     cursor: pointer;
     transition: transform 0.22s, box-shadow 0.22s, background 0.4s;
@@ -414,31 +413,130 @@ select:focus {
     flex-direction: column;
     align-items: center;
     border: none;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+    box-shadow: 0 4px 18px rgba(0,0,0,0.10);
     position: relative;
     overflow: hidden;
     color: #fff;
-    font-weight: 600;
+    font-weight: 700;
+    font-size: 1.15rem;
 }
 .menu-item:hover, .menu-item:active {
-    transform: translateY(-6px) scale(1.04);
-    box-shadow: 0 8px 24px rgba(30,80,220,0.13);
-    background: linear-gradient(90deg, #1bffff 0%, #2e3192 100%);
+    transform: translateY(-10px) scale(1.06);
+    box-shadow: 0 12px 32px rgba(30,80,220,0.18);
+    background: linear-gradient(120deg, #1bffff 0%, #2e3192 100%);
     color: #fff;
 }
 .menu-icon {
-    font-size: 2.2rem;
-    margin-bottom: 12px;
-    filter: drop-shadow(0 2px 6px #3390ec33);
+    font-size: 2.7rem;
+    margin-bottom: 16px;
+    filter: drop-shadow(0 2px 8px #3390ec33);
     transition: filter 0.3s;
 }
 .menu-item:hover .menu-icon {
-    filter: drop-shadow(0 0 12px #1bffff);
+    filter: drop-shadow(0 0 18px #1bffff);
 }
 .menu-text {
-    font-weight: 600;
-    font-size: 1.1rem;
+    font-weight: 700;
+    font-size: 1.18rem;
     letter-spacing: 0.5px;
+}
+/* --- КРАСИВОЕ ПРИВЕТСТВИЕ --- */
+.welcome-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background: linear-gradient(135deg, #3390ec 0%, #fff 100%);
+}
+.welcome-img {
+    width: 140px;
+    margin-bottom: 32px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.18);
+    border-radius: 18px;
+}
+.welcome-title {
+    color: #222;
+    margin-bottom: 16px;
+    font-size: 2.2rem;
+    font-weight: 800;
+    text-shadow: 0 2px 8px #3390ec22;
+}
+.welcome-desc {
+    font-size: 1.25rem;
+    color: #444;
+    margin-bottom: 24px;
+    text-align: center;
+}
+.welcome-btn {
+    font-size: 1.2rem;
+    padding: 16px 44px;
+    margin-top: 18px;
+    background: linear-gradient(90deg, #3390ec 0%, #1bffff 100%);
+    color: #fff;
+    border: none;
+    border-radius: 14px;
+    box-shadow: 0 4px 18px rgba(51,144,236,0.13);
+    cursor: pointer;
+    font-weight: 700;
+    transition: background 0.2s, transform 0.2s;
+}
+.welcome-btn:hover {
+    background: linear-gradient(90deg, #1bffff 0%, #3390ec 100%);
+    transform: scale(1.04);
+}
+/* --- КРАСИВЫЙ ПРОФИЛЬ --- */
+.profile-block {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255,255,255,0.7);
+    border-radius: 16px;
+    padding: 8px 18px;
+    box-shadow: 0 2px 8px #2196f355;
+    cursor: pointer;
+    transition: box-shadow 0.2s, background 0.2s;
+}
+.profile-block:hover {
+    background: #e3eafc;
+    box-shadow: 0 4px 16px #2196f355;
+}
+.profile-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #eee;
+    object-fit: cover;
+    border: 2px solid #3390ec;
+}
+.profile-name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1e3c72;
+}
+.profile-id {
+    font-size: 0.9em;
+    color: #888;
+}
+@media (max-width: 600px) {
+    .card-menu {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+        padding: 18px 0 10px 0;
+    }
+    .menu-item {
+        padding: 18px 6px;
+        font-size: 1rem;
+    }
+    .menu-icon {
+        font-size: 1.5rem;
+    }
+    .welcome-title {
+        font-size: 1.3rem;
+    }
+    .welcome-img {
+        width: 80px;
+    }
 }
 
 footer {
